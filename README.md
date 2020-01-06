@@ -39,7 +39,7 @@ To extract English subtitles from English intertitles (good when you don't have 
 To generate appropriate styled intertitles for existing subtitles (good when you have access to subtitles for a film, but the appearance doesn't fit well):
 
 ```bash
-    cabiria generate LesVampires1915.mkv LesVampires1915.srt -o LesVampires1915.ass
+    cabiria generate LesVampires1915.mkv LesVampires1915.srt LesVampires1915.ass
 ```
 
 To do both:
