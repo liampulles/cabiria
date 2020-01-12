@@ -46,7 +46,7 @@ func TestDetectMinLum(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(fmt.Sprintf("%v => %f", test.fixture, test.expected), func(t *testing.T) {
-			img, err := image.GetImage(filepath.Join("testdata", test.fixture))
+			img, err := image.GetPNG(filepath.Join("testdata", test.fixture))
 			if err != nil {
 				t.Errorf("Encountered error loading fixture image: %v", err)
 				return
@@ -76,7 +76,7 @@ func TestDetectMaxLum(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(fmt.Sprintf("%v => %f", test.fixture, test.expected), func(t *testing.T) {
-			img, err := image.GetImage(filepath.Join("testdata", test.fixture))
+			img, err := image.GetPNG(filepath.Join("testdata", test.fixture))
 			if err != nil {
 				t.Errorf("Encountered error loading fixture image: %v", err)
 				return
@@ -106,7 +106,7 @@ func TestLevelImage(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(fmt.Sprintf("%v, %f, %f", test.path, test.min, test.max), func(t *testing.T) {
-			img, err := image.GetImage(filepath.Join("testdata", test.path))
+			img, err := image.GetPNG(filepath.Join("testdata", test.path))
 			if err != nil {
 				t.Errorf("Encountered error loading fixture image: %v", err)
 				return

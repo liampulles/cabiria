@@ -6,9 +6,9 @@ import (
 	gomath "math"
 
 	"github.com/lucasb-eyer/go-colorful"
-	_ "github.com/lucasb-eyer/go-colorful"
 )
 
+// DetectMaxLum returns the largest pixel Luminance found in the image.
 func DetectMaxLum(img image.Image) float64 {
 	max := float64(0)
 	ForEachPixel(img, func(x int, y int, col color.Color) {
@@ -20,6 +20,7 @@ func DetectMaxLum(img image.Image) float64 {
 	return max
 }
 
+// DetectMinLum returns the smallest pixel Luminance found in the image.
 func DetectMinLum(img image.Image) float64 {
 	min := gomath.MaxFloat64
 	ForEachPixel(img, func(x int, y int, col color.Color) {
@@ -31,6 +32,9 @@ func DetectMinLum(img image.Image) float64 {
 	return min
 }
 
+// LevelImage linearly scales the luminance of pixels in an image, such that
+// pixels which had luminance min are now black, and pixels which had
+// luminance max are now white.
 func LevelImage(img image.Image, min float64, max float64) image.Image {
 	new := image.NewRGBA(img.Bounds())
 	ForEachPixel(img, func(x int, y int, col color.Color) {
@@ -51,6 +55,8 @@ func levelValue(val float64, min float64, max float64) float64 {
 
 }
 
+// Luminance uses L in HSL for luminance, since it works well when linearly
+// scaled.
 func Luminance(col color.Color) float64 {
 	// Convert to colorful color
 	neueCol, _ := colorful.MakeColor(col)

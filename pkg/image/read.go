@@ -4,12 +4,11 @@ import (
 	"image"
 	"os"
 
-	// Load file formats
 	"image/png"
-	_ "image/png"
 )
 
-func GetImage(filePath string) (image.Image, error) {
+// GetPNG is able to load a PNG file from the disk into memory.
+func GetPNG(filePath string) (image.Image, error) {
 	f, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
@@ -18,6 +17,7 @@ func GetImage(filePath string) (image.Image, error) {
 	return image, err
 }
 
+// SavePNG encodes the image to the desired png file.
 func SavePNG(img image.Image, filePath string) error {
 	out, err := os.Create(filePath)
 	if err != nil {

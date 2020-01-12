@@ -5,20 +5,14 @@ import (
 	"image"
 )
 
+// CompareImage will return an error if there is any difference in the colors
+// of corresponding pixels in actual and expected.
 func CompareImage(actual image.Image, expected image.Image) error {
 	actualB := actual.Bounds()
 	expectedB := expected.Bounds()
-	if actualB.Size().X != expectedB.Size().X {
-		return fmt.Errorf("Actual and expected have different widths.\n"+
-			"Actual width: %d\n"+
-			"Expected width: %d",
-			actualB.Size().X, expectedB.Size().X)
-	}
-	if actualB.Size().Y != expectedB.Size().Y {
-		return fmt.Errorf("Actual and expected have different heights.\n"+
-			"Actual height: %d\n"+
-			"Expected height: %d",
-			actualB.Size().Y, expectedB.Size().Y)
+	err := ValidateBoundsMatch(actualB, expectedB)
+	if err != nil {
+		return err
 	}
 
 	for y := actualB.Min.Y; y < actualB.Max.Y; y++ {
@@ -34,6 +28,25 @@ func CompareImage(actual image.Image, expected image.Image) error {
 					re, ge, be, ae)
 			}
 		}
+	}
+	return nil
+}
+
+// ValidateBoundsMatch will return an error if the width or height of
+// actualB and expectedB differ.
+func ValidateBoundsMatch(actualB image.Rectangle, expectedB image.Rectangle) error {
+
+	if actualB.Size().X != expectedB.Dx() {
+		return fmt.Errorf("Actual and expected have different widths.\n"+
+			"Actual width: %d\n"+
+			"Expected width: %d",
+			actualB.Dx(), expectedB.Dx())
+	}
+	if actualB.Dy() != expectedB.Dy() {
+		return fmt.Errorf("Actual and expected have different heights.\n"+
+			"Actual height: %d\n"+
+			"Expected height: %d",
+			actualB.Dy(), expectedB.Dy())
 	}
 	return nil
 }

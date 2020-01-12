@@ -12,11 +12,11 @@ import (
 func TestCompare_SinglePixelImage_WhenImagesAreTheSame(t *testing.T) {
 	// Setup fixture
 	path := filepath.Join("testdata", "singlepixel_1.png")
-	img1, err := image.GetImage(path)
+	img1, err := image.GetPNG(path)
 	if err != nil {
 		t.Errorf("Failed to load img1: %v", err)
 	}
-	img2, err := image.GetImage(path)
+	img2, err := image.GetPNG(path)
 	if err != nil {
 		t.Errorf("Failed to load img2: %v", err)
 	}
@@ -33,12 +33,12 @@ func TestCompare_SinglePixelImage_WhenImagesAreTheSame(t *testing.T) {
 func TestCompare_SinglePixelImage_WhenImagesAreDifferent(t *testing.T) {
 	// Setup fixture
 	path1 := filepath.Join("testdata", "singlepixel_1.png")
-	img1, err := image.GetImage(path1)
+	img1, err := image.GetPNG(path1)
 	if err != nil {
 		t.Errorf("Failed to load img1: %v", err)
 	}
 	path2 := filepath.Join("testdata", "singlepixel_2.png")
-	img2, err := image.GetImage(path2)
+	img2, err := image.GetPNG(path2)
 	if err != nil {
 		t.Errorf("Failed to load img2: %v", err)
 	}
@@ -55,11 +55,11 @@ func TestCompare_SinglePixelImage_WhenImagesAreDifferent(t *testing.T) {
 func TestCompare_NormalImage_WhenImagesAreTheSame(t *testing.T) {
 	// Setup fixture
 	path := filepath.Join("testdata", "normal_1.png")
-	img1, err := image.GetImage(path)
+	img1, err := image.GetPNG(path)
 	if err != nil {
 		t.Errorf("Failed to load img1: %v", err)
 	}
-	img2, err := image.GetImage(path)
+	img2, err := image.GetPNG(path)
 	if err != nil {
 		t.Errorf("Failed to load img2: %v", err)
 	}
@@ -76,12 +76,12 @@ func TestCompare_NormalImage_WhenImagesAreTheSame(t *testing.T) {
 func TestCompare_NormalImage_WhenImagesAreDifferent(t *testing.T) {
 	// Setup fixture
 	path1 := filepath.Join("testdata", "normal_1.png")
-	img1, err := image.GetImage(path1)
+	img1, err := image.GetPNG(path1)
 	if err != nil {
 		t.Errorf("Failed to load img1: %v", err)
 	}
 	path2 := filepath.Join("testdata", "normal_2.png")
-	img2, err := image.GetImage(path2)
+	img2, err := image.GetPNG(path2)
 	if err != nil {
 		t.Errorf("Failed to load img2: %v", err)
 	}
