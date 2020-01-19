@@ -19,7 +19,7 @@ func Train(csvPath string, modelPath string) error {
 	}
 
 	//Initialises a new KNN classifier
-	cls := ml.NewKNNPredictor()
+	cls := ml.NewKNNClassifier(1)
 
 	//Do a training-test split
 	trainData, testData := ml.Split(rawData, 0.5)

@@ -4,27 +4,30 @@ import (
 	"compress/gzip"
 	"encoding/gob"
 	"fmt"
-	"math"
 	"os"
+	"sort"
 
 	calibriaMath "github.com/liampulles/cabiria/pkg/math"
 )
 
 var gobRegistered bool
 
-type KNNPredictor struct {
+type KNNClassifier struct {
+	K      uint
 	Points []Sample
 }
 
-func NewKNNPredictor() *KNNPredictor {
-	return &KNNPredictor{}
+func NewKNNClassifier(k uint) *KNNClassifier {
+	return &KNNClassifier{
+		K: k,
+	}
 }
 
-func LoadKNNPredictor(path string) (*KNNPredictor, error) {
+func LoadKNNClassifier(path string) (*KNNClassifier, error) {
 	// Register type
 	if !gobRegistered {
 		gobRegistered = true
-		gob.Register(KNNPredictor{})
+		gob.Register(KNNClassifier{})
 	}
 	// Open file
 	file, err := os.Open(path)
@@ -40,7 +43,7 @@ func LoadKNNPredictor(path string) (*KNNPredictor, error) {
 	defer fz.Close()
 	// Read the file
 	dec := gob.NewDecoder(fz)
-	kc := &KNNPredictor{}
+	kc := &KNNClassifier{}
 	err = dec.Decode(kc)
 	if err != nil {
 		return nil, err
@@ -48,7 +51,7 @@ func LoadKNNPredictor(path string) (*KNNPredictor, error) {
 	return kc, nil
 }
 
-func (kc *KNNPredictor) Fit(samples []Sample) error {
+func (kc *KNNClassifier) Fit(samples []Sample) error {
 	if samples == nil || len(samples) == 0 {
 		return fmt.Errorf("Input samples must have at least one element. Input: %v", samples)
 	}
@@ -57,7 +60,7 @@ func (kc *KNNPredictor) Fit(samples []Sample) error {
 	return nil
 }
 
-func (kc *KNNPredictor) Predict(input []Datum) ([]Datum, error) {
+func (kc *KNNClassifier) Predict(input []Datum) ([]Datum, error) {
 	output := make([]Datum, len(input))
 	for i, elem := range input {
 		target, err := kc.PredictSingle(elem)
@@ -69,19 +72,19 @@ func (kc *KNNPredictor) Predict(input []Datum) ([]Datum, error) {
 	return output, nil
 }
 
-func (kc *KNNPredictor) PredictSingle(input Datum) (Datum, error) {
-	closeSample, err := findClosest(kc.Points, input)
+func (kc *KNNClassifier) PredictSingle(input Datum) (Datum, error) {
+	closeSample, err := findClosest(kc.Points, input, kc.K)
 	if err != nil {
 		return nil, err
 	}
 	return closeSample.Output, nil
 }
 
-func (kc *KNNPredictor) Save(path string) error {
+func (kc *KNNClassifier) Save(path string) error {
 	// Register type
 	if !gobRegistered {
 		gobRegistered = true
-		gob.Register(KNNPredictor{})
+		gob.Register(KNNClassifier{})
 	}
 	// Open file
 	file, err := os.Create(path)
@@ -98,21 +101,75 @@ func (kc *KNNPredictor) Save(path string) error {
 	return err
 }
 
-func findClosest(samples []Sample, closestTo Datum) (Sample, error) {
-	var closest Sample
-	closestDist := math.MaxFloat64
-	for _, sample := range samples {
+type ArgDistPair struct {
+	Arg  int
+	Dist float64
+}
+
+type ArgDistPairs []ArgDistPair
+
+func (adp ArgDistPairs) Len() int           { return len(adp) }
+func (adp ArgDistPairs) Swap(i, j int)      { adp[i], adp[j] = adp[j], adp[i] }
+func (adp ArgDistPairs) Less(i, j int) bool { return adp[i].Dist < adp[j].Dist }
+
+func findClosest(samples []Sample, closestTo Datum, k uint) (Sample, error) {
+	pairs := make([]ArgDistPair, len(samples))
+	for i, sample := range samples {
 		dist, err := calibriaMath.EuclideanDistance(closestTo, sample.Input)
 		if err != nil {
 			return Sample{}, err
 		}
-		if dist < closestDist {
-			closestDist = dist
-			closest = sample
+		pairs[i] = ArgDistPair{i, dist}
+	}
+	closestArgs := minKDistArg(pairs, k)
+	closestSamples := selectByArgs(samples, closestArgs)
+	return mode(closestSamples)
+}
+
+func minKDistArg(pairs ArgDistPairs, k uint) []int {
+	sort.Sort(pairs)
+	var args []int
+	for i := uint(0); i < k && i < uint(len(pairs)); i++ {
+		args = append(args, pairs[i].Arg)
+	}
+	return args
+}
+
+func selectByArgs(samples []Sample, args []int) []Sample {
+	var result []Sample
+	for _, elem := range args {
+		if elem < len(samples) {
+			result = append(result, samples[elem])
 		}
 	}
-	if closestDist == math.MaxFloat64 {
-		return Sample{}, fmt.Errorf("No closest identified. Size of samples: %d", len(samples))
+	return result
+}
+
+func mode(samples []Sample) (Sample, error) {
+	pairMatches := make([]uint, len(samples))
+	for i := 0; i < len(samples)-1; i++ {
+		for j := i; j < len(samples); j++ {
+			match, err := Match(samples[i].Output, samples[j].Output)
+			if err != nil {
+				return Sample{}, err
+			}
+			if match {
+				pairMatches[i]++
+				pairMatches[j]++
+			}
+		}
 	}
-	return closest, nil
+	return samples[maxArg(pairMatches)], nil
+}
+
+func maxArg(input []uint) int {
+	largest := uint(0)
+	largestI := -1
+	for i, elem := range input {
+		if elem >= largest {
+			largest = elem
+			largestI = i
+		}
+	}
+	return largestI
 }

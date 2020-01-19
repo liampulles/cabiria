@@ -8,11 +8,11 @@ import (
 	"github.com/liampulles/cabiria/pkg/ml"
 )
 
-func TestKNNPredictor_Fit_WhenInputNil_ExpectFail(t *testing.T) {
+func TestKNNClassifier_Fit_WhenInputNil_ExpectFail(t *testing.T) {
 	// Setup fixture
 
 	// Exercise SUT
-	knn := ml.NewKNNPredictor()
+	knn := ml.NewKNNClassifier(1)
 	err := knn.Fit(nil)
 
 	// Verify result
@@ -21,12 +21,12 @@ func TestKNNPredictor_Fit_WhenInputNil_ExpectFail(t *testing.T) {
 	}
 }
 
-func TestKNNPredictor_Fit_WhenInputEmpty_ExpectFail(t *testing.T) {
+func TestKNNClassifier_Fit_WhenInputEmpty_ExpectFail(t *testing.T) {
 	// Setup fixture
 	input := make([]ml.Sample, 0)
 
 	// Exercise SUT
-	knn := ml.NewKNNPredictor()
+	knn := ml.NewKNNClassifier(1)
 	err := knn.Fit(input)
 
 	// Verify result
@@ -35,7 +35,7 @@ func TestKNNPredictor_Fit_WhenInputEmpty_ExpectFail(t *testing.T) {
 	}
 }
 
-func TestKNNPredictor_Fit_WhenInputNotEmpty_ExpectPass(t *testing.T) {
+func TestKNNClassifier_Fit_WhenInputNotEmpty_ExpectPass(t *testing.T) {
 	// Setup fixture
 	input := make([]ml.Sample, 1)
 	input[0] = sample(topLeftInput(0.0, 0.0), topLeftClass())
@@ -44,7 +44,7 @@ func TestKNNPredictor_Fit_WhenInputNotEmpty_ExpectPass(t *testing.T) {
 	expectedElem := sample(topLeftInput(0.0, 0.0), topLeftClass())
 
 	// Exercise SUT
-	knn := ml.NewKNNPredictor()
+	knn := ml.NewKNNClassifier(1)
 	err := knn.Fit(input)
 
 	// Verify result
@@ -59,12 +59,12 @@ func TestKNNPredictor_Fit_WhenInputNotEmpty_ExpectPass(t *testing.T) {
 	}
 }
 
-func TestKNNPredictor_Save_ExpectPass(t *testing.T) {
+func TestKNNClassifier_Save_ExpectPass(t *testing.T) {
 	// Setup fixture
 	path := "testdata/testSave.model"
 
 	// Exercise SUT
-	knn := KNNPredictor(sample(topLeftInput(0.0, 0.0), topLeftClass()))
+	knn := KNNClassifier(sample(topLeftInput(0.0, 0.0), topLeftClass()))
 	err := knn.Save(path)
 
 	// Verify result
@@ -73,12 +73,12 @@ func TestKNNPredictor_Save_ExpectPass(t *testing.T) {
 	}
 }
 
-func Test_LoadKNNPredictor_ExpectPass(t *testing.T) {
+func Test_LoadKNNClassifier_ExpectPass(t *testing.T) {
 	// Setup fixture
 	path := "testdata/testLoad.model"
 
 	// Exercise SUT
-	_, err := ml.LoadKNNPredictor(path)
+	_, err := ml.LoadKNNClassifier(path)
 
 	// Verify result
 	if err != nil {
@@ -89,7 +89,7 @@ func Test_LoadKNNPredictor_ExpectPass(t *testing.T) {
 func Test_KNNSaveAndLoad_ExpectLoadedToMatchSaved(t *testing.T) {
 	// Setup fixture
 	path := "testdata/testRoundtrip.model"
-	knnFixture := KNNPredictor(
+	knnFixture := KNNClassifier(
 		sample(bottomRightInput(0.0, 0.0), bottomRightClass()),
 		sample(topRightInput(0.0, 0.0), topRightClass()),
 		sample(topLeftInput(0.0, 0.0), topLeftClass()),
@@ -97,7 +97,7 @@ func Test_KNNSaveAndLoad_ExpectLoadedToMatchSaved(t *testing.T) {
 	)
 
 	// Setup expectations
-	expected := KNNPredictor(
+	expected := KNNClassifier(
 		sample(bottomRightInput(0.0, 0.0), bottomRightClass()),
 		sample(topRightInput(0.0, 0.0), topRightClass()),
 		sample(topLeftInput(0.0, 0.0), topLeftClass()),
@@ -109,7 +109,7 @@ func Test_KNNSaveAndLoad_ExpectLoadedToMatchSaved(t *testing.T) {
 	if err != nil {
 		t.Errorf("SUT threw error: %v", err)
 	}
-	actual, err := ml.LoadKNNPredictor(path)
+	actual, err := ml.LoadKNNClassifier(path)
 	if err != nil {
 		t.Errorf("SUT threw error: %v", err)
 	}
@@ -121,16 +121,16 @@ func Test_KNNSaveAndLoad_ExpectLoadedToMatchSaved(t *testing.T) {
 
 }
 
-func TestKNNPredictor_PredictSingle_WhenClassifierAndInputIsValid_ExpectPass(t *testing.T) {
+func TestKNNClassifier_PredictSingle_WhenClassifierAndInputIsValid_ExpectPass(t *testing.T) {
 	// Setup fixture, expectations
 	var tests = []struct {
-		knnFixture   *ml.KNNPredictor
+		knnFixture   *ml.KNNClassifier
 		inputFixture ml.Datum
 		expected     ml.Datum
 	}{
 		// Single sample with matching input -> Expect sample class
 		{
-			KNNPredictor(
+			KNNClassifier(
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
 			),
 			topLeftInput(0.0, 0.0),
@@ -138,7 +138,7 @@ func TestKNNPredictor_PredictSingle_WhenClassifierAndInputIsValid_ExpectPass(t *
 		},
 		// Single sample with non-matching input -> Expect sample class
 		{
-			KNNPredictor(
+			KNNClassifier(
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
 			),
 			bottomRightInput(0.0, 0.0),
@@ -146,7 +146,7 @@ func TestKNNPredictor_PredictSingle_WhenClassifierAndInputIsValid_ExpectPass(t *
 		},
 		// Multiple samples with a matching input -> Expect matching class
 		{
-			KNNPredictor(
+			KNNClassifier(
 				sample(bottomRightInput(0.0, 0.0), bottomRightClass()),
 				sample(topRightInput(0.0, 0.0), topRightClass()),
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
@@ -157,7 +157,7 @@ func TestKNNPredictor_PredictSingle_WhenClassifierAndInputIsValid_ExpectPass(t *
 		},
 		// Multiple samples with a non-matching input -> Expect closest class
 		{
-			KNNPredictor(
+			KNNClassifier(
 				sample(bottomRightInput(0.0, 0.0), bottomRightClass()),
 				sample(topRightInput(0.0, 0.0), topRightClass()),
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
@@ -168,7 +168,7 @@ func TestKNNPredictor_PredictSingle_WhenClassifierAndInputIsValid_ExpectPass(t *
 		},
 		// -> Variation of above
 		{
-			KNNPredictor(
+			KNNClassifier(
 				sample(bottomRightInput(0.0, 0.0), bottomRightClass()),
 				sample(topRightInput(0.0, 0.0), topRightClass()),
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
@@ -196,16 +196,16 @@ func TestKNNPredictor_PredictSingle_WhenClassifierAndInputIsValid_ExpectPass(t *
 	}
 }
 
-func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testing.T) {
+func TestKNNClassifier_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testing.T) {
 	// Setup fixture, expectations
 	var tests = []struct {
-		knnFixture   *ml.KNNPredictor
+		knnFixture   *ml.KNNClassifier
 		inputFixture []ml.Datum
 		expected     []ml.Datum
 	}{
 		// Single sample with matching input -> Expect sample class
 		{
-			KNNPredictor(
+			KNNClassifier(
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
 			),
 			[]ml.Datum{
@@ -217,7 +217,7 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 		},
 		// Single sample with non-matching input -> Expect sample class
 		{
-			KNNPredictor(
+			KNNClassifier(
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
 			),
 			[]ml.Datum{
@@ -229,7 +229,7 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 		},
 		// Multiple samples with a matching input -> Expect matching class
 		{
-			KNNPredictor(
+			KNNClassifier(
 				sample(bottomRightInput(0.0, 0.0), bottomRightClass()),
 				sample(topRightInput(0.0, 0.0), topRightClass()),
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
@@ -244,7 +244,7 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 		},
 		// Multiple samples with a non-matching input -> Expect closest class
 		{
-			KNNPredictor(
+			KNNClassifier(
 				sample(bottomRightInput(0.0, 0.0), bottomRightClass()),
 				sample(topRightInput(0.0, 0.0), topRightClass()),
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
@@ -259,7 +259,7 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 		},
 		// -> Variation of above
 		{
-			KNNPredictor(
+			KNNClassifier(
 				sample(bottomRightInput(0.0, 0.0), bottomRightClass()),
 				sample(topRightInput(0.0, 0.0), topRightClass()),
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
@@ -274,7 +274,7 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 		},
 		// Single sample with multiple matching input -> Expect sample class
 		{
-			KNNPredictor(
+			KNNClassifier(
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
 			),
 			[]ml.Datum{
@@ -290,7 +290,7 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 		},
 		// Single sample with multiple non-matching input -> Expect sample class
 		{
-			KNNPredictor(
+			KNNClassifier(
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
 			),
 			[]ml.Datum{
@@ -306,7 +306,7 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 		},
 		// Multiple samples with mutiple matching input -> Expect matching class
 		{
-			KNNPredictor(
+			KNNClassifier(
 				sample(bottomRightInput(0.0, 0.0), bottomRightClass()),
 				sample(topRightInput(0.0, 0.0), topRightClass()),
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
@@ -325,7 +325,7 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 		},
 		// Multiple samples with multiple non-matching input -> Expect closest class
 		{
-			KNNPredictor(
+			KNNClassifier(
 				sample(bottomRightInput(0.0, 0.0), bottomRightClass()),
 				sample(topRightInput(0.0, 0.0), topRightClass()),
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
@@ -402,8 +402,8 @@ func bottomRightClass() ml.Datum {
 	return []float64{1, 1}
 }
 
-func KNNPredictor(samples ...ml.Sample) *ml.KNNPredictor {
-	knn := ml.NewKNNPredictor()
+func KNNClassifier(samples ...ml.Sample) *ml.KNNClassifier {
+	knn := ml.NewKNNClassifier(1)
 	err := knn.Fit(samples)
 	if err != nil {
 		panic(err)
