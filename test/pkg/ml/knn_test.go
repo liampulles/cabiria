@@ -125,8 +125,8 @@ func TestKNNPredictor_PredictSingle_WhenClassifierAndInputIsValid_ExpectPass(t *
 	// Setup fixture, expectations
 	var tests = []struct {
 		knnFixture   *ml.KNNPredictor
-		inputFixture ml.Input
-		expected     ml.Output
+		inputFixture ml.Datum
+		expected     ml.Datum
 	}{
 		// Single sample with matching input -> Expect sample class
 		{
@@ -200,18 +200,18 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 	// Setup fixture, expectations
 	var tests = []struct {
 		knnFixture   *ml.KNNPredictor
-		inputFixture []ml.Input
-		expected     []ml.Output
+		inputFixture []ml.Datum
+		expected     []ml.Datum
 	}{
 		// Single sample with matching input -> Expect sample class
 		{
 			KNNPredictor(
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
 			),
-			[]ml.Input{
+			[]ml.Datum{
 				topLeftInput(0.0, 0.0),
 			},
-			[]ml.Output{
+			[]ml.Datum{
 				topLeftClass(),
 			},
 		},
@@ -220,10 +220,10 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 			KNNPredictor(
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
 			),
-			[]ml.Input{
+			[]ml.Datum{
 				bottomRightInput(0.0, 0.0),
 			},
-			[]ml.Output{
+			[]ml.Datum{
 				topLeftClass(),
 			},
 		},
@@ -235,10 +235,10 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
 				sample(bottomLeftInput(0.0, 0.0), bottomLeftClass()),
 			),
-			[]ml.Input{
+			[]ml.Datum{
 				topLeftInput(0.0, 0.0),
 			},
-			[]ml.Output{
+			[]ml.Datum{
 				topLeftClass(),
 			},
 		},
@@ -250,10 +250,10 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
 				sample(bottomLeftInput(0.0, 0.0), bottomLeftClass()),
 			),
-			[]ml.Input{
+			[]ml.Datum{
 				topLeftInput(0.5, -0.5),
 			},
-			[]ml.Output{
+			[]ml.Datum{
 				topLeftClass(),
 			},
 		},
@@ -265,10 +265,10 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
 				sample(bottomLeftInput(0.0, 0.0), bottomLeftClass()),
 			),
-			[]ml.Input{
+			[]ml.Datum{
 				bottomLeftInput(0.5, 0.5),
 			},
-			[]ml.Output{
+			[]ml.Datum{
 				bottomLeftClass(),
 			},
 		},
@@ -277,12 +277,12 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 			KNNPredictor(
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
 			),
-			[]ml.Input{
+			[]ml.Datum{
 				topLeftInput(0.0, 0.0),
 				topLeftInput(0.0, 0.0),
 				topLeftInput(0.0, 0.0),
 			},
-			[]ml.Output{
+			[]ml.Datum{
 				topLeftClass(),
 				topLeftClass(),
 				topLeftClass(),
@@ -293,12 +293,12 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 			KNNPredictor(
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
 			),
-			[]ml.Input{
+			[]ml.Datum{
 				bottomLeftInput(0.0, 0.0),
 				bottomRightInput(0.0, 0.0),
 				topRightInput(0.0, 0.0),
 			},
-			[]ml.Output{
+			[]ml.Datum{
 				topLeftClass(),
 				topLeftClass(),
 				topLeftClass(),
@@ -312,12 +312,12 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
 				sample(bottomLeftInput(0.0, 0.0), bottomLeftClass()),
 			),
-			[]ml.Input{
+			[]ml.Datum{
 				topLeftInput(0.0, 0.0),
 				topLeftInput(0.0, 0.0),
 				topLeftInput(0.0, 0.0),
 			},
-			[]ml.Output{
+			[]ml.Datum{
 				topLeftClass(),
 				topLeftClass(),
 				topLeftClass(),
@@ -331,13 +331,13 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 				sample(topLeftInput(0.0, 0.0), topLeftClass()),
 				sample(bottomLeftInput(0.0, 0.0), bottomLeftClass()),
 			),
-			[]ml.Input{
+			[]ml.Datum{
 				topLeftInput(0.5, -0.5),
 				topRightInput(0.5, -0.5),
 				bottomLeftInput(0.5, -0.5),
 				bottomRightInput(0.5, -0.5),
 			},
-			[]ml.Output{
+			[]ml.Datum{
 				topLeftClass(),
 				topRightClass(),
 				bottomLeftClass(),
@@ -363,42 +363,42 @@ func TestKNNPredictor_Predict_WhenClassifierAndInputIsValid_ExpectPass(t *testin
 	}
 }
 
-func sample(input ml.Input, output ml.Output) ml.Sample {
+func sample(input ml.Datum, output ml.Datum) ml.Sample {
 	return ml.Sample{
 		Input:  input,
 		Output: output,
 	}
 }
 
-func topLeftInput(varyX float64, varyY float64) ml.Input {
+func topLeftInput(varyX float64, varyY float64) ml.Datum {
 	return []float64{-1.0 + varyX, 1.0 + varyY}
 }
 
-func topRightInput(varyX float64, varyY float64) ml.Input {
+func topRightInput(varyX float64, varyY float64) ml.Datum {
 	return []float64{1.0 + varyX, 1.0 + varyY}
 }
 
-func bottomLeftInput(varyX float64, varyY float64) ml.Input {
+func bottomLeftInput(varyX float64, varyY float64) ml.Datum {
 	return []float64{-1.0 + varyX, -1.0 + varyY}
 }
 
-func bottomRightInput(varyX float64, varyY float64) ml.Input {
+func bottomRightInput(varyX float64, varyY float64) ml.Datum {
 	return []float64{1.0 + varyX, -1.0 + varyY}
 }
 
-func topLeftClass() ml.Output {
+func topLeftClass() ml.Datum {
 	return []float64{0, 0}
 }
 
-func topRightClass() ml.Output {
+func topRightClass() ml.Datum {
 	return []float64{0, 1}
 }
 
-func bottomLeftClass() ml.Output {
+func bottomLeftClass() ml.Datum {
 	return []float64{1, 0}
 }
 
-func bottomRightClass() ml.Output {
+func bottomRightClass() ml.Datum {
 	return []float64{1, 1}
 }
 

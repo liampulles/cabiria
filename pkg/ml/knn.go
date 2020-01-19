@@ -57,8 +57,8 @@ func (kc *KNNPredictor) Fit(samples []Sample) error {
 	return nil
 }
 
-func (kc *KNNPredictor) Predict(input []Input) ([]Output, error) {
-	output := make([]Output, len(input))
+func (kc *KNNPredictor) Predict(input []Datum) ([]Datum, error) {
+	output := make([]Datum, len(input))
 	for i, elem := range input {
 		target, err := kc.PredictSingle(elem)
 		if err != nil {
@@ -69,7 +69,7 @@ func (kc *KNNPredictor) Predict(input []Input) ([]Output, error) {
 	return output, nil
 }
 
-func (kc *KNNPredictor) PredictSingle(input Input) (Output, error) {
+func (kc *KNNPredictor) PredictSingle(input Datum) (Datum, error) {
 	closeSample, err := findClosest(kc.Points, input)
 	if err != nil {
 		return nil, err
@@ -98,7 +98,7 @@ func (kc *KNNPredictor) Save(path string) error {
 	return err
 }
 
-func findClosest(samples []Sample, closestTo Input) (Sample, error) {
+func findClosest(samples []Sample, closestTo Datum) (Sample, error) {
 	var closest Sample
 	closestDist := math.MaxFloat64
 	for _, sample := range samples {

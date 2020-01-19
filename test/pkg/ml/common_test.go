@@ -214,8 +214,8 @@ func TestMatch_WhenDifferingInputLength_ExpectFail(t *testing.T) {
 func TestMatch_WhenGivenValidInput_ExpectToPass(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
-		a        ml.Output
-		b        ml.Output
+		a        ml.Datum
+		b        ml.Datum
 		expected bool
 	}{
 		{
@@ -267,8 +267,8 @@ func (mc MockClassifier) Fit(samples []ml.Sample) error {
 	panic(fmt.Errorf("SUT should not call Fit"))
 }
 
-func (mc MockClassifier) Predict(input []ml.Input) ([]ml.Output, error) {
-	results := make([]ml.Output, len(input))
+func (mc MockClassifier) Predict(input []ml.Datum) ([]ml.Datum, error) {
+	results := make([]ml.Datum, len(input))
 	for i, elem := range input {
 		result, err := mc.PredictSingle(elem)
 		if err != nil {
@@ -279,7 +279,7 @@ func (mc MockClassifier) Predict(input []ml.Input) ([]ml.Output, error) {
 	return results, nil
 }
 
-func (mc MockClassifier) PredictSingle(input ml.Input) (ml.Output, error) {
+func (mc MockClassifier) PredictSingle(input ml.Datum) (ml.Datum, error) {
 	if input[0] < 0.0 {
 		return []float64{0}, nil
 	}

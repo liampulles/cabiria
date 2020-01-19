@@ -32,7 +32,7 @@ func Test(cls Predictor, testData []Sample) (float64, error) {
 	return float64(passed) / float64(len(testData)), nil
 }
 
-func Match(actual Output, expected Output) (bool, error) {
+func Match(actual Datum, expected Datum) (bool, error) {
 	if len(actual) != len(expected) {
 		return false, fmt.Errorf("Cannot Match outputs with different lengths. Actual length: %d, expected length: %d",
 			len(actual), len(expected))
