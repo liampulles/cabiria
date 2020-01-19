@@ -8,13 +8,13 @@ import (
 	calibriaMath "github.com/liampulles/cabiria/pkg/math"
 )
 
-func Split(samples []ClassificationSample, split float64) ([]ClassificationSample, []ClassificationSample) {
+func Split(samples []Sample, split float64) ([]Sample, []Sample) {
 	rand.Shuffle(len(samples), func(i, j int) { samples[i], samples[j] = samples[j], samples[i] })
 	cutoff := int(math.Ceil(float64(len(samples)) * calibriaMath.Clamp(split, 0.0, 1.0)))
 	return samples[:cutoff], samples[cutoff:]
 }
 
-func Test(cls ClassificationPredictor, testData []ClassificationSample) (float64, error) {
+func Test(cls Predictor, testData []Sample) (float64, error) {
 	passed := 0
 	for _, datum := range testData {
 		prediction, err := cls.PredictSingle(datum.Input)
@@ -32,7 +32,7 @@ func Test(cls ClassificationPredictor, testData []ClassificationSample) (float64
 	return float64(passed) / float64(len(testData)), nil
 }
 
-func Match(actual ClassificationOutput, expected ClassificationOutput) (bool, error) {
+func Match(actual Output, expected Output) (bool, error) {
 	if len(actual) != len(expected) {
 		return false, fmt.Errorf("Cannot Match outputs with different lengths. Actual length: %d, expected length: %d",
 			len(actual), len(expected))

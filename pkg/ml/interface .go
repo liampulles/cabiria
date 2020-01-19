@@ -2,30 +2,16 @@ package ml
 
 type Input []float64
 
-type ClassificationOutput []uint
+type Output []float64
 
-type ClassificationSample struct {
+type Sample struct {
 	Input  Input
-	Output ClassificationOutput
+	Output Output
 }
 
-type ClassificationPredictor interface {
-	Fit(samples []ClassificationSample) error
-	Predict(input []Input) ([]ClassificationOutput, error)
-	PredictSingle(input Input) (ClassificationOutput, error)
-	Save(path string) error
-}
-
-type RegressionOutput []float64
-
-type RegressionSample struct {
-	Input  Input
-	Output RegressionOutput
-}
-
-type RegressionPredictor interface {
-	Fit(samples []RegressionSample) error
-	Predict(input []Input) ([]RegressionOutput, error)
-	PredictSingle(input Input) (RegressionOutput, error)
+type Predictor interface {
+	Fit(samples []Sample) error
+	Predict(input []Input) ([]Output, error)
+	PredictSingle(input Input) (Output, error)
 	Save(path string) error
 }

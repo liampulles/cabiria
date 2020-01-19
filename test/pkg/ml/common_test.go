@@ -11,14 +11,14 @@ import (
 func TestTest_WhenGivenValidInput_ExpectPass(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
-		clsFixture      ml.ClassificationPredictor
-		testDataFixture []ml.ClassificationSample
+		clsFixture      ml.Predictor
+		testDataFixture []ml.Sample
 		expected        float64
 	}{
 		// No input - we cannot say.
 		{
 			MockClassifier{},
-			[]ml.ClassificationSample{},
+			[]ml.Sample{},
 			math.NaN(),
 		},
 		// -> Variation of above
@@ -30,7 +30,7 @@ func TestTest_WhenGivenValidInput_ExpectPass(t *testing.T) {
 		// Single fail - all fail
 		{
 			MockClassifier{},
-			[]ml.ClassificationSample{
+			[]ml.Sample{
 				falseNegative(),
 			},
 			0.0,
@@ -38,7 +38,7 @@ func TestTest_WhenGivenValidInput_ExpectPass(t *testing.T) {
 		// Single pass - all pass
 		{
 			MockClassifier{},
-			[]ml.ClassificationSample{
+			[]ml.Sample{
 				truePositive(),
 			},
 			1.0,
@@ -46,7 +46,7 @@ func TestTest_WhenGivenValidInput_ExpectPass(t *testing.T) {
 		// Multiple fail - all fail
 		{
 			MockClassifier{},
-			[]ml.ClassificationSample{
+			[]ml.Sample{
 				falseNegative(),
 				falsePositive(),
 				falseNegative(),
@@ -56,7 +56,7 @@ func TestTest_WhenGivenValidInput_ExpectPass(t *testing.T) {
 		// Multiple pass - all fail
 		{
 			MockClassifier{},
-			[]ml.ClassificationSample{
+			[]ml.Sample{
 				trueNegative(),
 				truePositive(),
 				trueNegative(),
@@ -66,7 +66,7 @@ func TestTest_WhenGivenValidInput_ExpectPass(t *testing.T) {
 		// Mixed bag - mixed results
 		{
 			MockClassifier{},
-			[]ml.ClassificationSample{
+			[]ml.Sample{
 				trueNegative(),
 				falseNegative(),
 				truePositive(),
@@ -100,21 +100,21 @@ func TestTest_WhenGivenValidInput_ExpectPass(t *testing.T) {
 func TestSplit(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
-		samplesFixture    []ml.ClassificationSample
+		samplesFixture    []ml.Sample
 		splitFixture      float64
 		expectedTrainSize int
 		expectedTestSize  int
 	}{
 		// Empty input - Empty outputs.
 		{
-			[]ml.ClassificationSample{},
+			[]ml.Sample{},
 			0.5,
 			0,
 			0,
 		},
 		// Single input when split > 0 -> all in Train
 		{
-			[]ml.ClassificationSample{
+			[]ml.Sample{
 				aSample(),
 			},
 			0.01,
@@ -123,7 +123,7 @@ func TestSplit(t *testing.T) {
 		},
 		// Single input when split == 0 -> all in Test
 		{
-			[]ml.ClassificationSample{
+			[]ml.Sample{
 				aSample(),
 			},
 			0.0,
@@ -132,7 +132,7 @@ func TestSplit(t *testing.T) {
 		},
 		// Multiple input when split == 0 -> all in Test
 		{
-			[]ml.ClassificationSample{
+			[]ml.Sample{
 				aSample(),
 				aSample(),
 				aSample(),
@@ -143,7 +143,7 @@ func TestSplit(t *testing.T) {
 		},
 		// Multiple input when split == 1 -> all in Train
 		{
-			[]ml.ClassificationSample{
+			[]ml.Sample{
 				aSample(),
 				aSample(),
 				aSample(),
@@ -154,7 +154,7 @@ func TestSplit(t *testing.T) {
 		},
 		// Odd input when split == 0.5 -> extra in Train
 		{
-			[]ml.ClassificationSample{
+			[]ml.Sample{
 				aSample(),
 				aSample(),
 				aSample(),
@@ -165,7 +165,7 @@ func TestSplit(t *testing.T) {
 		},
 		// Even input when split == 0.5 -> even amount
 		{
-			[]ml.ClassificationSample{
+			[]ml.Sample{
 				aSample(),
 				aSample(),
 				aSample(),
@@ -199,8 +199,8 @@ func TestSplit(t *testing.T) {
 
 func TestMatch_WhenDifferingInputLength_ExpectFail(t *testing.T) {
 	// Setup fixture
-	a := []uint{0}
-	b := []uint{0, 0}
+	a := []float64{0.0}
+	b := []float64{0.0, 0.0}
 
 	// Exercise SUT
 	_, err := ml.Match(a, b)
@@ -214,33 +214,33 @@ func TestMatch_WhenDifferingInputLength_ExpectFail(t *testing.T) {
 func TestMatch_WhenGivenValidInput_ExpectToPass(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
-		a        ml.ClassificationOutput
-		b        ml.ClassificationOutput
+		a        ml.Output
+		b        ml.Output
 		expected bool
 	}{
 		{
-			[]uint{},
-			[]uint{},
+			[]float64{},
+			[]float64{},
 			true,
 		},
 		{
-			[]uint{0},
-			[]uint{0},
+			[]float64{0},
+			[]float64{0},
 			true,
 		},
 		{
-			[]uint{0},
-			[]uint{1},
+			[]float64{0},
+			[]float64{1},
 			false,
 		},
 		{
-			[]uint{0, 1},
-			[]uint{0, 1},
+			[]float64{0, 1},
+			[]float64{0, 1},
 			true,
 		},
 		{
-			[]uint{1, 0},
-			[]uint{0, 1},
+			[]float64{1, 0},
+			[]float64{0, 1},
 			false,
 		},
 	}
@@ -263,12 +263,12 @@ func TestMatch_WhenGivenValidInput_ExpectToPass(t *testing.T) {
 
 type MockClassifier struct{}
 
-func (mc MockClassifier) Fit(samples []ml.ClassificationSample) error {
+func (mc MockClassifier) Fit(samples []ml.Sample) error {
 	panic(fmt.Errorf("SUT should not call Fit"))
 }
 
-func (mc MockClassifier) Predict(input []ml.Input) ([]ml.ClassificationOutput, error) {
-	results := make([]ml.ClassificationOutput, len(input))
+func (mc MockClassifier) Predict(input []ml.Input) ([]ml.Output, error) {
+	results := make([]ml.Output, len(input))
 	for i, elem := range input {
 		result, err := mc.PredictSingle(elem)
 		if err != nil {
@@ -279,33 +279,33 @@ func (mc MockClassifier) Predict(input []ml.Input) ([]ml.ClassificationOutput, e
 	return results, nil
 }
 
-func (mc MockClassifier) PredictSingle(input ml.Input) (ml.ClassificationOutput, error) {
+func (mc MockClassifier) PredictSingle(input ml.Input) (ml.Output, error) {
 	if input[0] < 0.0 {
-		return []uint{0}, nil
+		return []float64{0}, nil
 	}
-	return []uint{1}, nil
+	return []float64{1}, nil
 }
 
 func (mc MockClassifier) Save(path string) error {
 	panic(fmt.Errorf("SUT should not call Save"))
 }
 
-func aSample() ml.ClassificationSample {
-	return sample([]float64{0.0}, []uint{0})
+func aSample() ml.Sample {
+	return sample([]float64{0.0}, []float64{0})
 }
 
-func truePositive() ml.ClassificationSample {
-	return sample([]float64{1.0}, []uint{1})
+func truePositive() ml.Sample {
+	return sample([]float64{1.0}, []float64{1})
 }
 
-func trueNegative() ml.ClassificationSample {
-	return sample([]float64{-1.0}, []uint{0})
+func trueNegative() ml.Sample {
+	return sample([]float64{-1.0}, []float64{0})
 }
 
-func falsePositive() ml.ClassificationSample {
-	return sample([]float64{-1.0}, []uint{1})
+func falsePositive() ml.Sample {
+	return sample([]float64{-1.0}, []float64{1})
 }
 
-func falseNegative() ml.ClassificationSample {
-	return sample([]float64{1.0}, []uint{0})
+func falseNegative() ml.Sample {
+	return sample([]float64{1.0}, []float64{0})
 }

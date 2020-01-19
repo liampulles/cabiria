@@ -12,19 +12,19 @@ import (
 
 var gobRegistered bool
 
-type KNNClassifier struct {
-	Points []ClassificationSample
+type KNNPredictor struct {
+	Points []Sample
 }
 
-func NewKNNClassifier() *KNNClassifier {
-	return &KNNClassifier{}
+func NewKNNPredictor() *KNNPredictor {
+	return &KNNPredictor{}
 }
 
-func LoadKNNClassfier(path string) (*KNNClassifier, error) {
+func LoadKNNPredictor(path string) (*KNNPredictor, error) {
 	// Register type
 	if !gobRegistered {
 		gobRegistered = true
-		gob.Register(KNNClassifier{})
+		gob.Register(KNNPredictor{})
 	}
 	// Open file
 	file, err := os.Open(path)
@@ -40,7 +40,7 @@ func LoadKNNClassfier(path string) (*KNNClassifier, error) {
 	defer fz.Close()
 	// Read the file
 	dec := gob.NewDecoder(fz)
-	kc := &KNNClassifier{}
+	kc := &KNNPredictor{}
 	err = dec.Decode(kc)
 	if err != nil {
 		return nil, err
@@ -48,17 +48,17 @@ func LoadKNNClassfier(path string) (*KNNClassifier, error) {
 	return kc, nil
 }
 
-func (kc *KNNClassifier) Fit(samples []ClassificationSample) error {
+func (kc *KNNPredictor) Fit(samples []Sample) error {
 	if samples == nil || len(samples) == 0 {
 		return fmt.Errorf("Input samples must have at least one element. Input: %v", samples)
 	}
-	kc.Points = make([]ClassificationSample, len(samples))
+	kc.Points = make([]Sample, len(samples))
 	copy(kc.Points, samples)
 	return nil
 }
 
-func (kc *KNNClassifier) Predict(input []Input) ([]ClassificationOutput, error) {
-	output := make([]ClassificationOutput, len(input))
+func (kc *KNNPredictor) Predict(input []Input) ([]Output, error) {
+	output := make([]Output, len(input))
 	for i, elem := range input {
 		target, err := kc.PredictSingle(elem)
 		if err != nil {
@@ -69,7 +69,7 @@ func (kc *KNNClassifier) Predict(input []Input) ([]ClassificationOutput, error) 
 	return output, nil
 }
 
-func (kc *KNNClassifier) PredictSingle(input Input) (ClassificationOutput, error) {
+func (kc *KNNPredictor) PredictSingle(input Input) (Output, error) {
 	closeSample, err := findClosest(kc.Points, input)
 	if err != nil {
 		return nil, err
@@ -77,11 +77,11 @@ func (kc *KNNClassifier) PredictSingle(input Input) (ClassificationOutput, error
 	return closeSample.Output, nil
 }
 
-func (kc *KNNClassifier) Save(path string) error {
+func (kc *KNNPredictor) Save(path string) error {
 	// Register type
 	if !gobRegistered {
 		gobRegistered = true
-		gob.Register(KNNClassifier{})
+		gob.Register(KNNPredictor{})
 	}
 	// Open file
 	file, err := os.Create(path)
@@ -98,13 +98,13 @@ func (kc *KNNClassifier) Save(path string) error {
 	return err
 }
 
-func findClosest(samples []ClassificationSample, closestTo Input) (ClassificationSample, error) {
-	var closest ClassificationSample
+func findClosest(samples []Sample, closestTo Input) (Sample, error) {
+	var closest Sample
 	closestDist := math.MaxFloat64
 	for _, sample := range samples {
 		dist, err := calibriaMath.EuclideanDistance(closestTo, sample.Input)
 		if err != nil {
-			return ClassificationSample{}, err
+			return Sample{}, err
 		}
 		if dist < closestDist {
 			closestDist = dist
@@ -112,7 +112,7 @@ func findClosest(samples []ClassificationSample, closestTo Input) (Classificatio
 		}
 	}
 	if closestDist == math.MaxFloat64 {
-		return ClassificationSample{}, fmt.Errorf("No closest identified. Size of samples: %d", len(samples))
+		return Sample{}, fmt.Errorf("No closest identified. Size of samples: %d", len(samples))
 	}
 	return closest, nil
 }

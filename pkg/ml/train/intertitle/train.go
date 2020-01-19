@@ -19,7 +19,7 @@ func Train(csvPath string, modelPath string) error {
 	}
 
 	//Initialises a new KNN classifier
-	cls := ml.NewKNNClassifier()
+	cls := ml.NewKNNPredictor()
 
 	//Do a training-test split
 	trainData, testData := ml.Split(rawData, 0.5)
@@ -40,13 +40,13 @@ func Train(csvPath string, modelPath string) error {
 	return err
 }
 
-func loadCsv(path string) ([]ml.ClassificationSample, error) {
+func loadCsv(path string) ([]ml.Sample, error) {
 	csvFile, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	reader := csv.NewReader(bufio.NewReader(csvFile))
-	var samples []ml.ClassificationSample
+	var samples []ml.Sample
 	for {
 		line, err := reader.Read()
 		if err == io.EOF {
@@ -54,7 +54,7 @@ func loadCsv(path string) ([]ml.ClassificationSample, error) {
 		} else if err != nil {
 			return nil, err
 		}
-		sample := ml.ClassificationSample{}
+		sample := ml.Sample{}
 		for i := 0; i < len(line)-1; i++ {
 			f, err := strconv.ParseFloat(line[i], 64)
 			if err != nil {
@@ -66,7 +66,7 @@ func loadCsv(path string) ([]ml.ClassificationSample, error) {
 		if err != nil {
 			return nil, err
 		}
-		sample.Output = []uint{uint(f)}
+		sample.Output = []float64{f}
 		samples = append(samples, sample)
 	}
 	return samples, nil
