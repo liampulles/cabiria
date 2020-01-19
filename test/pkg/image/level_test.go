@@ -9,7 +9,7 @@ import (
 	"github.com/liampulles/cabiria/pkg/image"
 )
 
-func TestLuminance(t *testing.T) {
+func TestLightness(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
 		fixture  color.Color
@@ -23,7 +23,7 @@ func TestLuminance(t *testing.T) {
 	for _, test := range tests {
 		t.Run(fmt.Sprintf("%v => %f", test.fixture, test.expected), func(t *testing.T) {
 			// Exercise SUT
-			actual := image.Luminance(test.fixture)
+			actual := image.Lightness(test.fixture)
 
 			// Verify result
 			if actual != test.expected {
@@ -40,8 +40,8 @@ func TestDetectMinLum(t *testing.T) {
 		expected float64
 	}{
 		{"gray_with_extremes.png", 0.0},
-		{"gray.png", image.Luminance(color.RGBA{128, 128, 128, 255})},
-		{"color_gradient.png", image.Luminance(color.RGBA{127, 0, 0, 255})}, // Dark red value
+		{"gray.png", image.Lightness(color.RGBA{128, 128, 128, 255})},
+		{"color_gradient.png", image.Lightness(color.RGBA{127, 0, 0, 255})}, // Dark red value
 	}
 
 	for _, test := range tests {
@@ -70,8 +70,8 @@ func TestDetectMaxLum(t *testing.T) {
 		expected float64
 	}{
 		{"gray_with_extremes.png", 1.0},
-		{"gray.png", image.Luminance(color.RGBA{128, 128, 128, 255})},
-		{"color_gradient.png", image.Luminance(color.RGBA{127, 146, 255, 255})}, // Light blue
+		{"gray.png", image.Lightness(color.RGBA{128, 128, 128, 255})},
+		{"color_gradient.png", image.Lightness(color.RGBA{127, 146, 255, 255})}, // Light blue
 	}
 
 	for _, test := range tests {

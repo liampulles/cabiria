@@ -5,6 +5,8 @@ import (
 	"image/color"
 	gomath "math"
 
+	"github.com/liampulles/cabiria/pkg/math"
+
 	"github.com/lucasb-eyer/go-colorful"
 )
 
@@ -12,7 +14,7 @@ import (
 func DetectMaxLum(img image.Image) float64 {
 	max := float64(0)
 	ForEachPixel(img, func(x int, y int, col color.Color) {
-		curr := Luminance(col)
+		curr := Lightness(col)
 		if curr > max {
 			max = curr
 		}
@@ -24,7 +26,7 @@ func DetectMaxLum(img image.Image) float64 {
 func DetectMinLum(img image.Image) float64 {
 	min := gomath.MaxFloat64
 	ForEachPixel(img, func(x int, y int, col color.Color) {
-		curr := Luminance(col)
+		curr := Lightness(col)
 		if curr < min {
 			min = curr
 		}
@@ -51,25 +53,13 @@ func levelColor(col color.Color, min float64, max float64) color.Color {
 }
 
 func levelValue(val float64, min float64, max float64) float64 {
-	return clamp((val-min)/(max-min), 0.0, 1.0)
-
+	return math.Clamp((val-min)/(max-min), 0.0, 1.0)
 }
 
-// Luminance uses L in HSL for luminance, since it works well when linearly
-// scaled.
-func Luminance(col color.Color) float64 {
+// Lightness uses L in HSL.
+func Lightness(col color.Color) float64 {
 	// Convert to colorful color
 	neueCol, _ := colorful.MakeColor(col)
 	_, _, l := neueCol.Hsl()
-	return clamp(l, 0.0, 1.0)
-}
-
-func clamp(val float64, min float64, max float64) float64 {
-	if val <= min {
-		return min
-	}
-	if val >= max {
-		return max
-	}
-	return val
+	return math.Clamp(l, 0.0, 1.0)
 }

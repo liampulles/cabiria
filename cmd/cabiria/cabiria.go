@@ -1,1 +1,5 @@
-package cabiria
+package main
+
+func main() {
+
+}
