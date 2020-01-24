@@ -5,6 +5,8 @@ import (
 	"math"
 )
 
+// EuclideanDistance calculates the euclidean distance between the coordinates
+// a and b. If a and b are different sizes, an error is returned.
 func EuclideanDistance(a []float64, b []float64) (float64, error) {
 	if a == nil {
 		return -1.0, fmt.Errorf("a may not be nil")

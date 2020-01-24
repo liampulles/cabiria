@@ -53,7 +53,7 @@ func levelColor(col color.Color, min float64, max float64) color.Color {
 }
 
 func levelValue(val float64, min float64, max float64) float64 {
-	return math.Clamp((val-min)/(max-min), 0.0, 1.0)
+	return math.ClampFloat64((val-min)/(max-min), 0.0, 1.0)
 }
 
 // Lightness uses L in HSL.
@@ -61,5 +61,5 @@ func Lightness(col color.Color) float64 {
 	// Convert to colorful color
 	neueCol, _ := colorful.MakeColor(col)
 	_, _, l := neueCol.Hsl()
-	return math.Clamp(l, 0.0, 1.0)
+	return math.ClampFloat64(l, 0.0, 1.0)
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/liampulles/cabiria/pkg/math"
 )
 
-func TestClamp(t *testing.T) {
+func TestClampFloat64(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
 		min      float64
@@ -62,7 +62,7 @@ func TestClamp(t *testing.T) {
 	for _, test := range tests {
 		t.Run(fmt.Sprintf("%f -> [%f,%f] -> %f", test.val, test.min, test.max, test.expected), func(t *testing.T) {
 			// Exercise SUT
-			actual := math.Clamp(test.val, test.min, test.max)
+			actual := math.ClampFloat64(test.val, test.min, test.max)
 
 			// Verify result
 			if actual != test.expected {

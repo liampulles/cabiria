@@ -77,5 +77,5 @@ func GetIntensityStats(img image.Image) IntensityStats {
 func Intensity(col color.Color) float64 {
 	neueCol, _ := colorful.MakeColor(col)
 	l, _, _ := neueCol.Luv()
-	return calibriaMath.Clamp(l, 0.0, 1.0)
+	return calibriaMath.ClampFloat64(l, 0.0, 1.0)
 }
