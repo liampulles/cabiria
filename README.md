@@ -21,7 +21,6 @@ Cabiria is currently in pre-alpha. Stay tuned for an upcoming release!
 
 ## Key Objectives
 
-* Detect intertitles in silent films, perform OCR using tesseract, and extract SRT.
 * Generate pretty ASS intertitles, in a style that is not jarring.
 
 ## Install
@@ -30,28 +29,16 @@ As Cabiria is currently in heavy development, no installation candidate is avail
 
 ## Basic Usage
 
-To extract English subtitles from English intertitles (good when you don't have access to subtitles for a film):
 
-```bash
-    cabiria extract LesVampires1915.mkv LesVampires1915.srt
-```
-
-To generate appropriate styled intertitles for existing subtitles (good when you have access to subtitles for a film, but the appearance doesn't fit well):
+To generate appropriate styled intertitles for existing (`LesVampires1915.srt`) subtitles:
 
 ```bash
     cabiria generate LesVampires1915.mkv LesVampires1915.srt LesVampires1915.ass
 ```
 
-To do both:
-
-```bash
-    cabiria retitle LesVampires1915.mkv LesVampires1915.ass
-```
-
 ## Planned Usage
 
 * `cabiria resync`: Sync external subtitles to intertitles
-* `cabiria translate`: Plug into an existing subtitle translating API to translate subtitles.
 
 ## Contributing
 
