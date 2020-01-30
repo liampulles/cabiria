@@ -15,11 +15,11 @@
   <a href="#license">License</a>
 </p>
 
-## 🗡️ Status
+## ⚔️ Status
 
 Cabiria is currently in pre-alpha. Stay tuned for an upcoming release!
 
-## 🗡️ Key Objectives
+## 🛡️ Key Objectives
 
 * Generate pretty ASS intertitles, in a style that is not jarring.
 
@@ -27,7 +27,7 @@ Cabiria is currently in pre-alpha. Stay tuned for an upcoming release!
 
 As Cabiria is currently in heavy development, no installation candidate is available at this time. If you're *really* eager, you will need to set up a development environment as per the Wiki to use the application.
 
-## 🗡️ Basic Usage
+## 🤺 Basic Usage
 
 
 To generate appropriate styled intertitles for existing (`LesVampires1915.srt`) subtitles:
@@ -36,15 +36,15 @@ To generate appropriate styled intertitles for existing (`LesVampires1915.srt`) 
     cabiria generate LesVampires1915.mkv LesVampires1915.srt LesVampires1915.ass
 ```
 
-## 🗡️ Planned Usage
+## 🎭 Planned Usage
 
 * `cabiria resync`: Sync external subtitles to intertitles
 
-## 🗡️ Contributing
+## 🐉 Contributing
 
 If you wish to make a change, then I suggest making an issue for your proposal.
 If you're interested in helping out more generally, then <a href="mailto:me@liampulles.com">drop me a mail</a>.
 
-## 🗡️ License
+## 🦄 License
 
 See [LICENSE](LICENSE)
