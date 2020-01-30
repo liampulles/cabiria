@@ -4,7 +4,7 @@
   Cabiria
 </h1>
 
-<h4 align="center">An intertitle extractor, and ASS intertitle generator, for silent films.</a></h4>
+<h4 align="center">An ASS intertitle generator, for silent films.</a></h4>
 <p align="center">
   <a href="#status">Status</a> •
   <a href="#key-objectives">Key Objectives</a> •
