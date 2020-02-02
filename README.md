@@ -5,15 +5,15 @@
 </h1>
 
 <h4 align="center"> An ASS intertitle generator, for silent films.</a></h4>
-<!-- <p align="center">
-  <a href="#⚔️status">Status</a> •
-  <a href="#key-objectives">Key Objectives</a> •
-  <a href="#install">Install</a> •
-  <a href="#basic-usage">Basic Usage</a> •
-  <a href="#planned-usage">Planned Usage</a> •
-  <a href="#contributing">Contributing</a> •
-  <a href="#license">License</a>
-</p> -->
+<p align="center">
+  <a href="#-status">Status</a> •
+  <a href="#-key-objectives">Key Objectives</a> •
+  <a href="#-install">Install</a> •
+  <a href="#-basic-usage">Basic Usage</a> •
+  <a href="#-planned-usage">Planned Usage</a> •
+  <a href="#-contributing">Contributing</a> •
+  <a href="#-license">License</a>
+</p>
 
 ## ⚔️ Status
 

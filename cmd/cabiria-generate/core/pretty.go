@@ -6,7 +6,7 @@ type PrettyIntertitles struct{}
 
 func GeneratePrettyIntertitles(
 	videoInfo VideoInformation,
-	subInfo SubtitleInformation,
+	subInfo SubtitlesInformation,
 	config PrettyConfiguration) (PrettyIntertitles, error) {
 
 	// TODO: Correct sub timing slice to intertitles

@@ -4,18 +4,19 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/liampulles/cabiria/cmd/cabiria/core"
-	"github.com/liampulles/cabiria/cmd/cabiria/input"
+	"github.com/liampulles/cabiria/cmd/cabiria-generate/input"
+
+	"github.com/liampulles/cabiria/cmd/cabiria-generate/core"
 )
 
 func main() {
-	config, err := input.GetConfiguration(os.Args)
+	config, err := input.GetGenerateConfiguration()
 	failIf(err)
 	videoInfo, err := core.ExtractVideoInformation(config)
 	failIf(err)
-	subInfo, err := core.ExtractSubtitleInformation(config)
+	subsInfo, err := core.ExtractSubtitlesInformation(config)
 	failIf(err)
-	prettyIntertitles, err := core.GeneratePrettyIntertitles(videoInfo, subInfo, config)
+	prettyIntertitles, err := core.GeneratePrettyIntertitles(videoInfo, subsInfo, config)
 	failIf(err)
 	err = core.SaveASS(prettyIntertitles, config)
 	failIf(err)
