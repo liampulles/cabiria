@@ -80,9 +80,9 @@ func subs(subs ...subtitle.Subtitle) []subtitle.Subtitle {
 
 func sub(text string, start, end time.Time) subtitle.Subtitle {
 	return subtitle.Subtitle{
-		Start: start,
-		End:   end,
-		Text:  text,
+		StartTime: start,
+		EndTime:   end,
+		Text:      text,
 	}
 }
 

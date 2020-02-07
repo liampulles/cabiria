@@ -81,7 +81,7 @@ func shiftPeriods(periods Periods, amount time.Duration) Periods {
 
 func FixOverlaps(many Periods) Periods {
 	if len(many) == 0 {
-		return nil
+		return []Period{}
 	}
 	Sort(many)
 	var result []Period
@@ -101,7 +101,7 @@ func FixOverlaps(many Periods) Periods {
 
 func MergeTouching(many Periods, mergeFunc func(a, b Period) Period) Periods {
 	if len(many) == 0 {
-		return nil
+		return []Period{}
 	}
 	wrappedMergeFunc := func(set Periods) Periods {
 		return Periods([]Period{merge(set, mergeFunc)})

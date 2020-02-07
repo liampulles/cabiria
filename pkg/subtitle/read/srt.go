@@ -79,9 +79,9 @@ func closeAndAddCurrent(start, end time.Time, lines []string, subs []subtitle.Su
 	joined := strings.Join(lines, "\n")
 	joined = style.RemoveStylesFromSRTText(joined)
 	new := subtitle.Subtitle{
-		Start: start,
-		End:   end,
-		Text:  joined,
+		StartTime: start,
+		EndTime:   end,
+		Text:      joined,
 	}
 
 	subs = append(subs, new)

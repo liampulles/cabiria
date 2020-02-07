@@ -194,19 +194,6 @@ func TestTransformToNew(t *testing.T) {
 		end      time.Time
 		expected period.Periods
 	}{
-		// Empty cases
-		{
-			nil,
-			timestamp(0, 0, 1, 0),
-			timestamp(0, 0, 2, 0),
-			nil,
-		},
-		{
-			periods(),
-			timestamp(0, 0, 1, 0),
-			timestamp(0, 0, 2, 0),
-			periods(),
-		},
 		// Single period
 		{
 			periods(
@@ -309,6 +296,7 @@ func TestTransformToNew(t *testing.T) {
 
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("[%d]", i), func(t *testing.T) {
+			fmt.Printf("%d", i)
 			// Exercise SUT
 			actual := test.periods.TransformToNew(test.start, test.end)
 
@@ -329,7 +317,7 @@ func TestFixOverlaps(t *testing.T) {
 		// Empty cases
 		{
 			nil,
-			nil,
+			periods(),
 		},
 		{
 			periods(),
@@ -453,7 +441,7 @@ func TestMergeTouching(t *testing.T) {
 		// Empty cases
 		{
 			nil,
-			nil,
+			periods(),
 		},
 		{
 			periods(),
