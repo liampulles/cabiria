@@ -5,7 +5,7 @@ import (
 )
 
 type Subtitle struct {
-	Start time.Time
-	End   time.Time
-	Text  string
+	StartTime time.Time
+	EndTime   time.Time
+	Text      string
 }

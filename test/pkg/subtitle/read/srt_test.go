@@ -9,6 +9,7 @@ import (
 	"github.com/liampulles/cabiria/pkg/subtitle"
 	"github.com/liampulles/cabiria/pkg/subtitle/read"
 	subTest "github.com/liampulles/cabiria/pkg/subtitle/test"
+	calibriaTime "github.com/liampulles/cabiria/pkg/time"
 )
 
 func TestReadSRT_WhenSRTValid(t *testing.T) {
@@ -30,8 +31,8 @@ func TestReadSRT_WhenSRTValid(t *testing.T) {
 			subs(
 				sub(
 					"First line\nSecond line",
-					timestamp(0, 2, 31, 567),
-					timestamp(0, 2, 37, 164),
+					timestamp("00:02:31,567"),
+					timestamp("00:02:37,164"),
 				),
 			),
 		},
@@ -40,18 +41,18 @@ func TestReadSRT_WhenSRTValid(t *testing.T) {
 			subs(
 				sub(
 					"First line\nSecond line",
-					timestamp(0, 1, 11, 111),
-					timestamp(0, 2, 22, 222),
+					timestamp("00:01:11,111"),
+					timestamp("00:02:22,222"),
 				),
 				sub(
 					"First line\nSecond line",
-					timestamp(0, 2, 22, 222),
-					timestamp(0, 3, 33, 333),
+					timestamp("00:02:22,222"),
+					timestamp("00:03:33,333"),
 				),
 				sub(
 					"First line\nSecond line",
-					timestamp(0, 0, 0, 0),
-					timestamp(23, 59, 59, 999),
+					timestamp("00:00:00,000"),
+					timestamp("23:59:59,999"),
 				),
 			),
 		},
@@ -85,6 +86,10 @@ func sub(text string, start, end time.Time) subtitle.Subtitle {
 	}
 }
 
-func timestamp(hour, min, sec, milli int) time.Time {
-	return time.Date(0, time.January, 1, hour, min, sec, milli*1e+6, time.UTC)
+func timestamp(s string) time.Time {
+	t, err := calibriaTime.FromSRTTimecode(s)
+	if err != nil {
+		panic(err)
+	}
+	return t
 }

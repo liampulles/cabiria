@@ -2,6 +2,8 @@ package test
 
 import (
 	"fmt"
+	"math"
+	"time"
 
 	"github.com/liampulles/cabiria/pkg/subtitle"
 )
@@ -33,11 +35,15 @@ func CompareSubtitle(actual, expected subtitle.Subtitle) error {
 	if actual.Text != expected.Text {
 		return fmt.Errorf("text differs: Actual: %s, Expected: %s", actual.Text, expected.Text)
 	}
-	if !actual.Start.Equal(expected.Start) {
-		return fmt.Errorf("start differs: Actual: %s, Expected: %s", actual.Start, expected.Start)
+	if !veryClose(actual.StartTime, expected.StartTime) {
+		return fmt.Errorf("startTime differs: Actual: %s, Expected: %s", actual.StartTime, expected.StartTime)
 	}
-	if !actual.End.Equal(expected.End) {
-		return fmt.Errorf("end differs: Actual: %s, Expected: %s", actual.End, expected.End)
+	if !veryClose(actual.EndTime, expected.EndTime) {
+		return fmt.Errorf("endTime differs: Actual: %s, Expected: %s", actual.EndTime, expected.EndTime)
 	}
 	return nil
+}
+
+func veryClose(actual, expected time.Time) bool {
+	return math.Abs(float64(actual.Sub(expected))) < float64(50*time.Nanosecond)
 }

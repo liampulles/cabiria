@@ -9,11 +9,10 @@ import (
 
 	"github.com/liampulles/cabiria/pkg/file"
 	"github.com/liampulles/cabiria/pkg/subtitle"
+	calibriaTime "github.com/liampulles/cabiria/pkg/time"
 )
 
 type lineType int
-
-const srtTimecodeFormat = "15:04:05"
 
 const (
 	index lineType = iota
@@ -94,26 +93,13 @@ func getTimecodes(line string) (time.Time, time.Time, error) {
 	if len(fields) < 3 {
 		return time.Now(), time.Now(), fmt.Errorf("the timecode line needs at least 3 fields in a SRT file. Received: %s", line)
 	}
-	start, err := fromTimecode(fields[0])
+	start, err := calibriaTime.FromSRTTimecode(fields[0])
 	if err != nil {
 		return time.Now(), time.Now(), err
 	}
-	end, err := fromTimecode(fields[2])
+	end, err := calibriaTime.FromSRTTimecode(fields[2])
 	if err != nil {
 		return time.Now(), time.Now(), err
 	}
 	return start, end, err
-}
-
-func fromTimecode(timecode string) (time.Time, error) {
-	t, err := time.Parse(srtTimecodeFormat, timecode[:len(timecode)-4])
-	if err != nil {
-		return time.Now(), err
-	}
-	milli, err := time.ParseDuration(timecode[len(timecode)-3:] + "ms")
-	if err != nil {
-		return time.Now(), err
-	}
-	return t.Add(milli), nil
-
 }
