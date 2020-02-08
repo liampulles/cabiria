@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	calibriaTime "github.com/liampulles/cabiria/pkg/time"
+	cabiriaTime "github.com/liampulles/cabiria/pkg/time"
 )
 
 func TestFromFrameAndFPS(t *testing.T) {
@@ -18,7 +18,7 @@ func TestFromFrameAndFPS(t *testing.T) {
 		{
 			0,
 			0.0,
-			calibriaTime.InvalidTime,
+			cabiriaTime.InvalidTime,
 		},
 		{
 			0,
@@ -28,7 +28,7 @@ func TestFromFrameAndFPS(t *testing.T) {
 		{
 			1,
 			0.0,
-			calibriaTime.InvalidTime,
+			cabiriaTime.InvalidTime,
 		},
 		{
 			1,
@@ -56,7 +56,7 @@ func TestFromFrameAndFPS(t *testing.T) {
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("[%d]", i), func(t *testing.T) {
 			// Exercise SUT
-			actual := calibriaTime.FromFrameAndFPS(test.frame, test.fps)
+			actual := cabiriaTime.FromFrameAndFPS(test.frame, test.fps)
 
 			// Verify result
 			if !actual.Equal(test.expected) {

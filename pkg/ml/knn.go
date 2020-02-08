@@ -7,7 +7,7 @@ import (
 	"os"
 	"sort"
 
-	calibriaMath "github.com/liampulles/cabiria/pkg/math"
+	cabiriaMath "github.com/liampulles/cabiria/pkg/math"
 )
 
 var gobRegistered bool
@@ -115,7 +115,7 @@ func (adp ArgDistPairs) Less(i, j int) bool { return adp[i].Dist < adp[j].Dist }
 func findClosest(samples []Sample, closestTo Datum, k uint) (Sample, error) {
 	pairs := make([]ArgDistPair, len(samples))
 	for i, sample := range samples {
-		dist, err := calibriaMath.EuclideanDistance(closestTo, sample.Input)
+		dist, err := cabiriaMath.EuclideanDistance(closestTo, sample.Input)
 		if err != nil {
 			return Sample{}, err
 		}

@@ -76,3 +76,38 @@ func TestDiff(t *testing.T) {
 		})
 	}
 }
+
+func TestDiff_WhenImageBoundsDoNotMatch(t *testing.T) {
+	// Setup fixture
+	var tests = []struct {
+		file1 string
+		file2 string
+	}{
+		{"white.png", "tiny.png"},
+	}
+
+	for _, test := range tests {
+		t.Run(fmt.Sprintf("(%v, %v)", test.file1, test.file2), func(t *testing.T) {
+			// Setup Fixture
+			img1, err := image.GetPNG(filepath.Join("testdata", test.file1))
+			if err != nil {
+				t.Errorf("Encountered error loading fixture img1: %v", err)
+				return
+			}
+			img2, err := image.GetPNG(filepath.Join("testdata", test.file2))
+			if err != nil {
+				t.Errorf("Encountered error loading fixture img2: %v", err)
+				return
+			}
+
+			// Exercise SUT
+			_, err = image.Diff(img1, img2)
+
+			// Verify result (should be very close)
+			if err == nil {
+				t.Errorf("Expected an err, but none was returned.")
+				return
+			}
+		})
+	}
+}

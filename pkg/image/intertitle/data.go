@@ -3,8 +3,8 @@ package intertitle
 import (
 	"fmt"
 
-	calibriaImage "github.com/liampulles/cabiria/pkg/image"
-	calibriaMath "github.com/liampulles/cabiria/pkg/math"
+	cabiriaImage "github.com/liampulles/cabiria/pkg/image"
+	cabiriaMath "github.com/liampulles/cabiria/pkg/math"
 	"github.com/lucasb-eyer/go-colorful"
 
 	"image"
@@ -43,7 +43,7 @@ func (is IntensityStats) asCSV() string {
 
 // GetIntensityStats extracts intensity statistics from an image.
 func GetIntensityStats(img image.Image) IntensityStats {
-	levelled := calibriaImage.LevelImage(img, 0.1, 0.9)
+	levelled := cabiriaImage.LevelImage(img, 0.1, 0.9)
 	sum := float64(0)
 	lowerSum := float64(0)
 	middleSum := float64(0)
@@ -51,7 +51,7 @@ func GetIntensityStats(img image.Image) IntensityStats {
 	lowerCount := float64(0.0001) // Avoid divide by zero issues
 	middleCount := float64(0.0001)
 	upperCount := float64(0.0001)
-	calibriaImage.ForEachPixel(levelled, func(x int, y int, col color.Color) {
+	cabiriaImage.ForEachPixel(levelled, func(x int, y int, col color.Color) {
 		intensity := Intensity(col)
 		sum += intensity
 		if intensity < 0.25 {
@@ -81,5 +81,5 @@ func GetIntensityStats(img image.Image) IntensityStats {
 func Intensity(col color.Color) float64 {
 	neueCol, _ := colorful.MakeColor(col)
 	l, _, _ := neueCol.Luv()
-	return calibriaMath.ClampFloat64(l, 0.0, 1.0)
+	return cabiriaMath.ClampFloat64(l, 0.0, 1.0)
 }

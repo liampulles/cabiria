@@ -10,14 +10,3 @@ func ClampFloat64(val float64, min float64, max float64) float64 {
 	}
 	return val
 }
-
-// ClampInt limits val to be between min and max, inclusive.
-func ClampInt(val int, min int, max int) int {
-	if val <= min {
-		return min
-	}
-	if val >= max {
-		return max
-	}
-	return val
-}

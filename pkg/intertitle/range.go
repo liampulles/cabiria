@@ -3,7 +3,7 @@ package intertitle
 import (
 	"time"
 
-	calibriaTime "github.com/liampulles/cabiria/pkg/time"
+	cabiriaTime "github.com/liampulles/cabiria/pkg/time"
 	"github.com/liampulles/cabiria/pkg/time/period"
 )
 
@@ -23,11 +23,11 @@ func (ir IntertitleRange) Valid() bool {
 }
 
 func (ir IntertitleRange) Start() time.Time {
-	return calibriaTime.FromFrameAndFPS(ir.StartFrame, ir.FPS)
+	return cabiriaTime.FromFrameAndFPS(ir.StartFrame, ir.FPS)
 }
 
 func (ir IntertitleRange) End() time.Time {
-	return calibriaTime.FromFrameAndFPS(ir.EndFrame, ir.FPS)
+	return cabiriaTime.FromFrameAndFPS(ir.EndFrame, ir.FPS)
 }
 
 func (ir IntertitleRange) TransformToNew(start, end time.Time) period.Period {

@@ -7,7 +7,7 @@ import (
 
 	"github.com/liampulles/cabiria/pkg/intertitle"
 
-	calibriaTime "github.com/liampulles/cabiria/pkg/time"
+	cabiriaTime "github.com/liampulles/cabiria/pkg/time"
 )
 
 func AlignSubtitles(subs []Subtitle, interRanges []intertitle.IntertitleRange) []Subtitle {
@@ -113,8 +113,8 @@ func rangedSortedSet(subs []Subtitle, interRanges []intertitle.IntertitleRange) 
 	rangedSet = append(rangedSet, subsAsPeriods(subs)...)
 
 	mergedInterRanges := period.MergeTouching(interRangesAsPeriods(interRanges), func(a, b period.Period) period.Period {
-		newStart := calibriaTime.Min(a.Start(), b.Start())
-		newEnd := calibriaTime.Max(a.End(), b.End())
+		newStart := cabiriaTime.Min(a.Start(), b.Start())
+		newEnd := cabiriaTime.Max(a.End(), b.End())
 		return a.TransformToNew(newStart, newEnd)
 	})
 	rangedSet = append(rangedSet, mergedInterRanges...)

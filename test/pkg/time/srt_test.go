@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	calibriaTime "github.com/liampulles/cabiria/pkg/time"
+	cabiriaTime "github.com/liampulles/cabiria/pkg/time"
 )
 
 func TestFromSRTTimecode_WhenInputIsValid(t *testing.T) {
@@ -47,7 +47,7 @@ func TestFromSRTTimecode_WhenInputIsValid(t *testing.T) {
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("[%d]", i), func(t *testing.T) {
 			// Exercise SUT
-			actual, err := calibriaTime.FromSRTTimecode(test.timecode)
+			actual, err := cabiriaTime.FromSRTTimecode(test.timecode)
 
 			// Verify result
 			if err != nil {

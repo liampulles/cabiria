@@ -3,7 +3,7 @@ package period
 import (
 	"time"
 
-	calibriaTime "github.com/liampulles/cabiria/pkg/time"
+	cabiriaTime "github.com/liampulles/cabiria/pkg/time"
 )
 
 type TimeFunction func(Period) time.Time
@@ -47,8 +47,8 @@ func Scale(period Period, origin time.Time, factor float64) Period {
 	if period == nil {
 		return nil
 	}
-	newStart := calibriaTime.Scale(period.Start(), origin, factor)
-	newEnd := calibriaTime.Scale(period.End(), origin, factor)
+	newStart := cabiriaTime.Scale(period.Start(), origin, factor)
+	newEnd := cabiriaTime.Scale(period.End(), origin, factor)
 	// If the scale is negative, switch them.
 	if factor < 0.0 {
 		newStart, newEnd = newEnd, newStart
@@ -57,11 +57,11 @@ func Scale(period Period, origin time.Time, factor float64) Period {
 }
 
 func Min(a, b Period, timeFunc TimeFunction) time.Time {
-	return calibriaTime.Min(timeFunc(a), timeFunc(b))
+	return cabiriaTime.Min(timeFunc(a), timeFunc(b))
 }
 
 func Max(a, b Period, timeFunc TimeFunction) time.Time {
-	return calibriaTime.Max(timeFunc(a), timeFunc(b))
+	return cabiriaTime.Max(timeFunc(a), timeFunc(b))
 }
 
 func Duration(period Period) time.Duration {

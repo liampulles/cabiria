@@ -5,7 +5,7 @@ import (
 	"math"
 	"testing"
 
-	calibriaMath "github.com/liampulles/cabiria/pkg/math"
+	cabiriaMath "github.com/liampulles/cabiria/pkg/math"
 )
 
 func TestEuclideanDistance_ValidInput_ShouldPass(t *testing.T) {
@@ -45,7 +45,7 @@ func TestEuclideanDistance_ValidInput_ShouldPass(t *testing.T) {
 	for _, test := range tests {
 		t.Run(fmt.Sprintf("(%v,%v) -> %f", test.a, test.b, test.expected), func(t *testing.T) {
 			// Exercise SUT
-			actual, err := calibriaMath.EuclideanDistance(test.a, test.b)
+			actual, err := cabiriaMath.EuclideanDistance(test.a, test.b)
 
 			// Verify result
 			if err != nil {
@@ -85,7 +85,7 @@ func TestEuclideanDistance_InputWithDifferentLength_ShouldFail(t *testing.T) {
 	for _, test := range tests {
 		t.Run(fmt.Sprintf("(%v,%v)", test.a, test.b), func(t *testing.T) {
 			// Exercise SUT
-			_, err := calibriaMath.EuclideanDistance(test.a, test.b)
+			_, err := cabiriaMath.EuclideanDistance(test.a, test.b)
 
 			// Verify result
 			if err == nil {

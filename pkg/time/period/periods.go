@@ -4,7 +4,7 @@ import (
 	"sort"
 	"time"
 
-	calibriaTime "github.com/liampulles/cabiria/pkg/time"
+	cabiriaTime "github.com/liampulles/cabiria/pkg/time"
 )
 
 // A group of periods can itself be considered a period - we'll implement the
@@ -29,7 +29,7 @@ func (p Periods) Start() time.Time {
 	}
 	min := p[0].Start()
 	for i := 1; i < len(p); i++ {
-		min = calibriaTime.Min(min, p[i].Start())
+		min = cabiriaTime.Min(min, p[i].Start())
 	}
 	return min
 }
@@ -40,7 +40,7 @@ func (p Periods) End() time.Time {
 	}
 	max := p[0].End()
 	for i := 1; i < len(p); i++ {
-		max = calibriaTime.Max(max, p[i].End())
+		max = cabiriaTime.Max(max, p[i].End())
 	}
 	return max
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/liampulles/cabiria/pkg/subtitle"
 	"github.com/liampulles/cabiria/pkg/subtitle/read"
 	subTest "github.com/liampulles/cabiria/pkg/subtitle/test"
-	calibriaTime "github.com/liampulles/cabiria/pkg/time"
+	cabiriaTime "github.com/liampulles/cabiria/pkg/time"
 )
 
 func TestReadSRT_WhenSRTValid(t *testing.T) {
@@ -87,7 +87,7 @@ func sub(text string, start, end time.Time) subtitle.Subtitle {
 }
 
 func timestamp(s string) time.Time {
-	t, err := calibriaTime.FromSRTTimecode(s)
+	t, err := cabiriaTime.FromSRTTimecode(s)
 	if err != nil {
 		panic(err)
 	}
