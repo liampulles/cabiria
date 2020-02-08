@@ -50,7 +50,7 @@ func alignSubtitlesFromOverlappingSets(sets [][]period.Period) []Subtitle {
 }
 
 func alignSubtitlesFromOverlappingSet(set []period.Period) []Subtitle {
-	// Seperate into intertitleRange and subtitle sets
+	// separate into intertitleRange and subtitle sets
 	var interRangePeriods period.Periods
 	var subtitlePeriods period.Periods
 	for _, elem := range set {

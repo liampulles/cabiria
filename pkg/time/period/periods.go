@@ -91,11 +91,11 @@ func FixOverlaps(many Periods) Periods {
 		if DoesOverlap(elem, currentSet) {
 			currentSet = append(currentSet, elem)
 		} else {
-			result = append(result, seperate(currentSet)...)
+			result = append(result, separate(currentSet)...)
 			currentSet = Periods([]Period{elem})
 		}
 	}
-	result = append(result, seperate(currentSet)...)
+	result = append(result, separate(currentSet)...)
 	return result
 }
 
@@ -158,7 +158,7 @@ func Sort(many Periods) {
 	})
 }
 
-func seperate(many Periods) Periods {
+func separate(many Periods) Periods {
 	var results Periods
 	spanDuration := float64(Duration(many))
 	overlappingDuration := float64(durationSum(many))

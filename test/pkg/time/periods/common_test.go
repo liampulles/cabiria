@@ -31,7 +31,7 @@ func TestDoesOverlap(t *testing.T) {
 			testPeriod{1, timestamp(0, 0, 1, 0), timestamp(0, 0, 2, 0)},
 			false,
 		},
-		// Completely seperate
+		// Completely separate
 		{
 			testPeriod{1, timestamp(0, 0, 1, 0), timestamp(0, 0, 2, 0)},
 			testPeriod{1, timestamp(0, 0, 3, 0), timestamp(0, 0, 4, 0)},
@@ -119,7 +119,7 @@ func TestTouching(t *testing.T) {
 			testPeriod{1, timestamp(0, 0, 1, 0), timestamp(0, 0, 2, 0)},
 			false,
 		},
-		// Completely seperate
+		// Completely separate
 		{
 			testPeriod{1, timestamp(0, 0, 1, 0), timestamp(0, 0, 2, 0)},
 			testPeriod{1, timestamp(0, 0, 3, 0), timestamp(0, 0, 4, 0)},
@@ -207,7 +207,7 @@ func TestOverlap(t *testing.T) {
 			testPeriod{1, timestamp(0, 0, 1, 0), timestamp(0, 0, 2, 0)},
 			time.Duration(0),
 		},
-		// Completely seperate
+		// Completely separate
 		{
 			testPeriod{1, timestamp(0, 0, 1, 0), timestamp(0, 0, 2, 0)},
 			testPeriod{1, timestamp(0, 0, 3, 0), timestamp(0, 0, 4, 0)},
