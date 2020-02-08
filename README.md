@@ -1,4 +1,4 @@
-<div align="center"><img src="cabiria-1914-poster.jpg" alt="Film poster for Cabiria (1914)" width="650px"></div>
+<div align="center"><img src="cabiria-1914-poster.webp" alt="Film poster for Cabiria (1914)"></div>
 <div align="center"><small><sup>Film poster for <i>Cabiria (1914)</i>. Original artwork by Leopoldo Metlicovitz.</sup></small></div>
 <h1 align="center">
   Cabiria
