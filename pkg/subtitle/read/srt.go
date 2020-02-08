@@ -29,27 +29,27 @@ func SRT(path string) ([]subtitle.Subtitle, error) {
 	}
 
 	var subs []subtitle.Subtitle
-	var currStart time.Time
-	var currEnd time.Time
-	var currLines []string
+	var currentStart time.Time
+	var currentEnd time.Time
+	var currentLines []string
 	lastLineType := blank
 	for _, line := range lines {
-		currLineType := getLineType(line, lastLineType)
-		switch currLineType {
+		currentLineType := getLineType(line, lastLineType)
+		switch currentLineType {
 		case blank, index:
-			subs = closeAndAddCurrent(currStart, currEnd, currLines, subs)
-			currLines = nil
+			subs = closeAndAddCurrent(currentStart, currEnd, currentLines, subs)
+			currentLines = nil
 		case timecodes:
-			currStart, currEnd, err = getTimecodes(line)
+			currentStart, currEnd, err = getTimecodes(line)
 			if err != nil {
 				return nil, err
 			}
 		case text:
-			currLines = append(currLines, line)
+			currentLines = append(currentLines, line)
 		}
-		lastLineType = currLineType
+		lastLineType = currentLineType
 	}
-	subs = closeAndAddCurrent(currStart, currEnd, currLines, subs)
+	subs = closeAndAddCurrent(currentStart, currEnd, currentLines, subs)
 	return subs, nil
 }
 

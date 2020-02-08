@@ -72,7 +72,7 @@ func TestAlignSubtitles(t *testing.T) {
 				sub(timestamp(0, 0, 2, 500), timestamp(0, 0, 4, 0), "text"),
 			),
 		},
-		// Already aigned intertitle and sub
+		// Already aligned intertitle and sub
 		{
 			subs(
 				sub(timestamp(0, 0, 0, 0), timestamp(0, 0, 1, 0), "text"),

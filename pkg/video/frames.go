@@ -9,7 +9,7 @@ import (
 
 const extractedFramePrefix = "extracted_frame"
 
-// ExtractFrames uses FFMPEG to extract a video into frames, and returns
+// ExtractFrames uses FFmpeg to extract a video into frames, and returns
 // An array of ordered filepaths to the resulting PNG files.
 func ExtractFrames(videoPath string, outputDirectory string) ([]string, error) {
 	// Extract the frames

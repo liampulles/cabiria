@@ -20,7 +20,7 @@ func Train(csvPath string, modelPath string) error {
 		return err
 	}
 
-	//Initialises a new KNN classifier
+	//Initializes a new KNN classifier
 	cls := ml.NewKNNClassifier(1)
 
 	//Do a training-test split
