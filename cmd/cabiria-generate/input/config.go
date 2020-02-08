@@ -6,7 +6,7 @@ import (
 	"path"
 )
 
-// GenerateConfiguration provides configuration options neccesary
+// GenerateConfiguration provides configuration options necessary
 //  for generating pretty subtitles from an input video and subtitle
 type GenerateConfiguration struct {
 	VideoPath string

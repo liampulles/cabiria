@@ -12,7 +12,7 @@ import (
 )
 
 // ProcessData looks at all the frames (images) in framePath, computes the
-//  intensity stats for each, formats them as lines of comma seperated values
+//  intensity stats for each, formats them as lines of comma separated values
 //  and saves the lines to csvPath
 func ProcessData(framePath string, csvPath string) error {
 	// get filenames

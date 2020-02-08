@@ -50,7 +50,7 @@ func TestCompare_SinglePixelImage_WhenImagesAreDifferent(t *testing.T) {
 
 	// Verify result
 	if err == nil {
-		t.Errorf("Expected comparison failure, but none occured.")
+		t.Errorf("Expected comparison failure, but none occurred.")
 	}
 }
 
@@ -93,7 +93,7 @@ func TestCompare_NormalImage_WhenImagesAreDifferent(t *testing.T) {
 
 	// Verify result
 	if err == nil {
-		t.Errorf("Expected comparison failure, but none occured.")
+		t.Errorf("Expected comparison failure, but none occurred.")
 	}
 }
 
@@ -130,7 +130,7 @@ func TestValidateBoundsMatch_WhenTheyDoMatch(t *testing.T) {
 	}
 }
 
-func TestValidateBoundsMatch_WhenTheyDontMatch(t *testing.T) {
+func TestValidateBoundsMatch_WhenTheyDoNotMatch(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
 		actual   image.Rectangle

@@ -1,10 +1,10 @@
 package core
 
-// SubtitlesConfiguration provides configuration options neccesary
+// SubtitlesConfiguration provides configuration options necessary
 //  to extract subtitles.
 type SubtitlesConfiguration interface{}
 
-// SubtitlesInformation is a representaion of the input subtitle,
+// SubtitlesInformation is a representation of the input subtitle,
 //  with some post processing.
 type SubtitlesInformation struct{}
 

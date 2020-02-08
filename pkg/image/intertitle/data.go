@@ -77,9 +77,9 @@ func GetIntensityStats(img image.Image) IntensityStats {
 	}
 }
 
-// Intensity retrieves the L componenet of the Luv trnasformation of col.
+// Intensity retrieves the L component of the Luv transformation of col.
 func Intensity(col color.Color) float64 {
-	neueCol, _ := colorful.MakeColor(col)
-	l, _, _ := neueCol.Luv()
+	newCol, _ := colorful.MakeColor(col)
+	l, _, _ := newCol.Luv()
 	return cabiriaMath.ClampFloat64(l, 0.0, 1.0)
 }
