@@ -12,7 +12,7 @@ import (
 
 // AlignSubtitles tries to align the given subtitles to the detected intertitles
 //  such that when the subtitles are played back, they align exactly with each
-//  intertitle segment in the film - barring some edge cases arising due to 
+//  intertitle segment in the film - barring some edge cases arising due to
 //  imperfect data.
 func AlignSubtitles(subs []Subtitle, interRanges []intertitle.Range) []Subtitle {
 	// TODO: Regularize input here
