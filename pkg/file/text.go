@@ -5,6 +5,8 @@ import (
 	"os"
 )
 
+// ReadLinesFromTextFile is a convenience method for extracting lines of text from
+// a text file. The end of line character is omitted.
 func ReadLinesFromTextFile(path string) ([]string, error) {
 	file, err := os.Open(path)
 	if err != nil {

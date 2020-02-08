@@ -11,6 +11,8 @@ import (
 	"image/color"
 )
 
+// IntensityStats defines statistics about an image's luminosity
+//  in various capacities
 type IntensityStats struct {
 	AvgIntensity       float64
 	LowerAvgIntensity  float64
@@ -39,6 +41,7 @@ func (is IntensityStats) asCSV() string {
 		is.UpperAvgIntensity, is.ProportionLower, is.ProportionMiddle, is.ProportionUpper)
 }
 
+// GetIntensityStats extracts intensity statistics from an image.
 func GetIntensityStats(img image.Image) IntensityStats {
 	levelled := calibriaImage.LevelImage(img, 0.1, 0.9)
 	sum := float64(0)
@@ -74,6 +77,7 @@ func GetIntensityStats(img image.Image) IntensityStats {
 	}
 }
 
+// Intensity retrieves the L componenet of the Luv trnasformation of col.
 func Intensity(col color.Color) float64 {
 	neueCol, _ := colorful.MakeColor(col)
 	l, _, _ := neueCol.Luv()

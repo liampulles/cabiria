@@ -6,12 +6,16 @@ import (
 	"path"
 )
 
+// GenerateConfiguration provides configuration options neccesary
+//  for generating pretty subtitles from an input video and subtitle
 type GenerateConfiguration struct {
 	VideoPath string
 	SRTPath   string
 	ASSPath   string
 }
 
+// GetGenerateConfiguration parses the command line to provide config
+//  for the core application
 func GetGenerateConfiguration() (GenerateConfiguration, error) {
 	video := flag.String("video", "", "Silent film to analyze for intertitles")
 	srt := flag.String("srt", "", "SRT subtitles to source for text")

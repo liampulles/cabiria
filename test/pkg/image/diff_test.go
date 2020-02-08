@@ -36,7 +36,7 @@ func TestColorDiff(t *testing.T) {
 	}
 }
 
-func TestImageDiff(t *testing.T) {
+func TestDiff(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
 		file1    string
@@ -63,7 +63,7 @@ func TestImageDiff(t *testing.T) {
 			}
 
 			// Exercise SUT
-			actual, err := image.ImageDiff(img1, img2)
+			actual, err := image.Diff(img1, img2)
 
 			// Verify result (should be very close)
 			if err != nil {

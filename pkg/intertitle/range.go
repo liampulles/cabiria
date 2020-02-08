@@ -7,6 +7,8 @@ import (
 	"github.com/liampulles/cabiria/pkg/time/period"
 )
 
+// IntertitleRange defines a set of frames which encapsulate an intertitle.
+//  IntertitleRange can be used as a Period.
 type IntertitleRange struct {
 	StartFrame int
 	EndFrame   int

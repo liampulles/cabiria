@@ -296,7 +296,6 @@ func TestTransformToNew(t *testing.T) {
 
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("[%d]", i), func(t *testing.T) {
-			fmt.Printf("%d", i)
 			// Exercise SUT
 			actual := test.periods.TransformToNew(test.start, test.end)
 
@@ -420,7 +419,6 @@ func TestFixOverlaps(t *testing.T) {
 
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("[%d]", i), func(t *testing.T) {
-			fmt.Printf("%d", i)
 			// Exercise SUT
 			actual := period.FixOverlaps(test.periods)
 
@@ -535,7 +533,6 @@ func TestMergeTouching(t *testing.T) {
 
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("[%d]", i), func(t *testing.T) {
-			fmt.Printf("%d", i)
 			// Exercise SUT
 			actual := period.MergeTouching(test.periods, func(a, b period.Period) period.Period {
 				aTestPeriod := a.(testPeriod)
@@ -699,7 +696,6 @@ func TestCoverGaps(t *testing.T) {
 
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("[%d]", i), func(t *testing.T) {
-			fmt.Printf("%d", i)
 			// Exercise SUT
 			actual := period.CoverGaps(test.periods)
 

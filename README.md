@@ -5,6 +5,7 @@
 </h1>
 
 <h4 align="center"> An ASS intertitle generator, for silent films.</a></h4>
+
 <p align="center">
   <a href="#-status">Status</a> •
   <a href="#-key-objectives">Key Objectives</a> •
@@ -13,6 +14,19 @@
   <a href="#-planned-usage">Planned Usage</a> •
   <a href="#-contributing">Contributing</a> •
   <a href="#-license">License</a>
+</p>
+
+<p align="center">
+  <a href="https://travis-ci.com/liampulles/cabiria">
+    <img src="https://travis-ci.com/liampulles/cabiria.svg?branch=master" alt="[Build Status]">
+  </a>
+    <img alt="GitHub go.mod Go version" src="https://img.shields.io/github/go-mod/go-version/liampulles/cabiria">
+  <a href="https://goreportcard.com/report/github.com/liampulles/cabiria">
+    <img src="https://goreportcard.com/badge/github.com/liampulles/cabiria" alt="[Go Report Card]">
+  </a>
+  <a href="https://codecov.io/gh/liampulles/cabiria">
+    <img src="https://codecov.io/gh/liampulles/cabiria/branch/master/graph/badge.svg" />
+  </a>
 </p>
 
 ## ⚔️ Status

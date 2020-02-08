@@ -288,8 +288,6 @@ func TestAlignSubtitles(t *testing.T) {
 
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("[%d]", i), func(t *testing.T) {
-			fmt.Printf("%d", i)
-			fmt.Printf("%d", i)
 			// Exercise SUT
 			actual := subtitle.AlignSubtitles(test.subs, test.interRanges)
 

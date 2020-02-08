@@ -10,9 +10,9 @@ import (
 	"github.com/lucasb-eyer/go-colorful"
 )
 
-// ImageDiff uses the average euclidiean distance in the CIEL*a*b* colorsace
+// Diff uses the average euclidiean distance in the CIEL*a*b* colorsace
 // to measure image difference.
-func ImageDiff(img1 image.Image, img2 image.Image) (float64, error) {
+func Diff(img1 image.Image, img2 image.Image) (float64, error) {
 	err := test.ValidateBoundsMatch(img1.Bounds(), img2.Bounds())
 	if err != nil {
 		return -1.0, err
