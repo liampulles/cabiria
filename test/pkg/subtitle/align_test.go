@@ -13,7 +13,7 @@ func TestAlignSubtitles(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
 		subs        []subtitle.Subtitle
-		interRanges []intertitle.IntertitleRange
+		interRanges []intertitle.Range
 		expected    []subtitle.Subtitle
 	}{
 		// No input, no output
@@ -303,14 +303,14 @@ func subs(subs ...subtitle.Subtitle) []subtitle.Subtitle {
 	return subs
 }
 
-func interRange(start, end int, fps float64) intertitle.IntertitleRange {
-	return intertitle.IntertitleRange{
+func interRange(start, end int, fps float64) intertitle.Range {
+	return intertitle.Range{
 		StartFrame: start,
 		EndFrame:   end,
 		FPS:        fps,
 	}
 }
 
-func interRanges(irs ...intertitle.IntertitleRange) []intertitle.IntertitleRange {
+func interRanges(irs ...intertitle.Range) []intertitle.Range {
 	return irs
 }

@@ -7,39 +7,39 @@ import (
 	"github.com/liampulles/cabiria/pkg/time/period"
 )
 
-// IntertitleRange defines a set of frames which encapsulate an intertitle.
-//  IntertitleRange can be used as a Period.
-type IntertitleRange struct {
+// Range defines a set of frames which encapsulate an intertitle.
+//  Range can be used as a Period.
+type Range struct {
 	StartFrame int
 	EndFrame   int
 	FPS        float64
 }
 
-func (ir IntertitleRange) Valid() bool {
+func (ir Range) Valid() bool {
 	return ir.FPS > 0.0 &&
 		ir.StartFrame >= 0 &&
 		ir.EndFrame >= 0 &&
 		ir.StartFrame <= ir.EndFrame
 }
 
-func (ir IntertitleRange) Start() time.Time {
+func (ir Range) Start() time.Time {
 	return cabiriaTime.FromFrameAndFPS(ir.StartFrame, ir.FPS)
 }
 
-func (ir IntertitleRange) End() time.Time {
+func (ir Range) End() time.Time {
 	return cabiriaTime.FromFrameAndFPS(ir.EndFrame, ir.FPS)
 }
 
-func (ir IntertitleRange) TransformToNew(start, end time.Time) period.Period {
-	return IntertitleRange{
+func (ir Range) TransformToNew(start, end time.Time) period.Period {
+	return Range{
 		StartFrame: fromTimeAndFPS(start, ir.FPS),
 		EndFrame:   fromTimeAndFPS(end, ir.FPS),
 		FPS:        ir.FPS,
 	}
 }
 
-func MapIntertitleRanges(intertitles []bool, fps float64) []IntertitleRange {
-	transitions := make([]IntertitleRange, 0)
+func MapIntertitleRanges(intertitles []bool, fps float64) []Range {
+	transitions := make([]Range, 0)
 	last := false
 	start := -1
 	for i, current := range intertitles {
@@ -59,11 +59,11 @@ func MapIntertitleRanges(intertitles []bool, fps float64) []IntertitleRange {
 	return transitions
 }
 
-func appendIntertitle(transitions []IntertitleRange, start, end int, fps float64) []IntertitleRange {
+func appendIntertitle(transitions []Range, start, end int, fps float64) []Range {
 	if start < 0 {
 		return transitions
 	}
-	new := IntertitleRange{
+	new := Range{
 		StartFrame: start,
 		EndFrame:   end,
 		FPS:        fps,

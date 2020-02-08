@@ -12,7 +12,7 @@ import (
 func TestValid(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
-		ir       intertitle.IntertitleRange
+		ir       intertitle.Range
 		expected bool
 	}{
 		// Invalid cases
@@ -63,7 +63,7 @@ func TestValid(t *testing.T) {
 func TestStart(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
-		ir       intertitle.IntertitleRange
+		ir       intertitle.Range
 		expected time.Time
 	}{
 		{
@@ -100,7 +100,7 @@ func TestStart(t *testing.T) {
 func TestEnd(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
-		ir       intertitle.IntertitleRange
+		ir       intertitle.Range
 		expected time.Time
 	}{
 		{
@@ -137,10 +137,10 @@ func TestEnd(t *testing.T) {
 func TestTransformToNew(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
-		ir       intertitle.IntertitleRange
+		ir       intertitle.Range
 		start    time.Time
 		end      time.Time
-		expected intertitle.IntertitleRange
+		expected intertitle.Range
 	}{
 		{
 			interRange(0, 0, 1.0),
@@ -199,7 +199,7 @@ func TestMapIntertitleRanges(t *testing.T) {
 	var tests = []struct {
 		intertitles []bool
 		fps         float64
-		expected    []intertitle.IntertitleRange
+		expected    []intertitle.Range
 	}{
 		// Empty cases
 		{
@@ -313,16 +313,16 @@ func TestMapIntertitleRanges(t *testing.T) {
 	}
 }
 
-func interRange(start, end int, fps float64) intertitle.IntertitleRange {
-	return intertitle.IntertitleRange{
+func interRange(start, end int, fps float64) intertitle.Range {
+	return intertitle.Range{
 		StartFrame: start,
 		EndFrame:   end,
 		FPS:        fps,
 	}
 }
 
-func interRanges(interRanges ...intertitle.IntertitleRange) []intertitle.IntertitleRange {
-	result := make([]intertitle.IntertitleRange, 0)
+func interRanges(interRanges ...intertitle.Range) []intertitle.Range {
+	result := make([]intertitle.Range, 0)
 	return append(result, interRanges...)
 }
 

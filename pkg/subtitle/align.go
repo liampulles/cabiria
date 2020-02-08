@@ -10,7 +10,7 @@ import (
 	cabiriaTime "github.com/liampulles/cabiria/pkg/time"
 )
 
-func AlignSubtitles(subs []Subtitle, interRanges []intertitle.IntertitleRange) []Subtitle {
+func AlignSubtitles(subs []Subtitle, interRanges []intertitle.Range) []Subtitle {
 	// TODO: Regularize input here
 	joined := rangedSortedSet(subs, interRanges)
 	overlaps := overlappingSets(joined)
@@ -55,7 +55,7 @@ func alignSubtitlesFromOverlappingSet(set []period.Period) []Subtitle {
 	var subtitlePeriods period.Periods
 	for _, elem := range set {
 		switch v := elem.(type) {
-		case intertitle.IntertitleRange:
+		case intertitle.Range:
 			interRangePeriods = append(interRangePeriods, v)
 		case Subtitle:
 			subtitlePeriods = append(subtitlePeriods, v)
@@ -107,7 +107,7 @@ func alignSubtitlesFromOverlappingSet(set []period.Period) []Subtitle {
 	return periodsAsSubs(result)
 }
 
-func rangedSortedSet(subs []Subtitle, interRanges []intertitle.IntertitleRange) []period.Period {
+func rangedSortedSet(subs []Subtitle, interRanges []intertitle.Range) []period.Period {
 	var rangedSet []period.Period
 
 	rangedSet = append(rangedSet, subsAsPeriods(subs)...)
@@ -139,7 +139,7 @@ func periodsAsSubs(periods []period.Period) []Subtitle {
 	return result
 }
 
-func interRangesAsPeriods(interRanges []intertitle.IntertitleRange) period.Periods {
+func interRangesAsPeriods(interRanges []intertitle.Range) period.Periods {
 	var result []period.Period
 	for _, elem := range interRanges {
 		result = append(result, elem)
