@@ -194,7 +194,7 @@ func TestTransformToNew(t *testing.T) {
 	}
 }
 
-func TestMapIntertitleRanges(t *testing.T) {
+func TestMapRanges(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
 		intertitles []bool
@@ -303,7 +303,7 @@ func TestMapIntertitleRanges(t *testing.T) {
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("[%d]", i), func(t *testing.T) {
 			// Exercise SUT
-			actual := intertitle.MapIntertitleRanges(test.intertitles, test.fps)
+			actual := intertitle.MapRanges(test.intertitles, test.fps)
 
 			// Verify result
 			if !reflect.DeepEqual(actual, test.expected) {

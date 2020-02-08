@@ -12,17 +12,22 @@ import (
 
 var gobRegistered bool
 
+// KNNClassifier defines a KNN model for classifying input against known
+//  samples. All training data is saved in the model, so be wary of size and
+//  performance for large training sets.
 type KNNClassifier struct {
 	K      uint
 	Points []Sample
 }
 
+// NewKNNClassifier constructs an untrained KNNClassifier.
 func NewKNNClassifier(k uint) *KNNClassifier {
 	return &KNNClassifier{
 		K: k,
 	}
 }
 
+// LoadKNNClassifier is a convenience method for loading a save KNNClassifier model.
 func LoadKNNClassifier(path string) (*KNNClassifier, error) {
 	// Register type
 	if !gobRegistered {
@@ -51,6 +56,7 @@ func LoadKNNClassifier(path string) (*KNNClassifier, error) {
 	return kc, nil
 }
 
+// Fit trains a KNNClassifier using given Samples.
 func (kc *KNNClassifier) Fit(samples []Sample) error {
 	if samples == nil || len(samples) == 0 {
 		return fmt.Errorf("Input samples must have at least one element. Input: %v", samples)
@@ -60,6 +66,8 @@ func (kc *KNNClassifier) Fit(samples []Sample) error {
 	return nil
 }
 
+// Predict finds the "closest" known Sample for each given Datum, and returns
+//  the associated Sample output.
 func (kc *KNNClassifier) Predict(input []Datum) ([]Datum, error) {
 	output := make([]Datum, len(input))
 	for i, elem := range input {
@@ -72,6 +80,8 @@ func (kc *KNNClassifier) Predict(input []Datum) ([]Datum, error) {
 	return output, nil
 }
 
+// PredictSingle finds the "closest" known Sample the given Datum, and returns
+//  the associated output.
 func (kc *KNNClassifier) PredictSingle(input Datum) (Datum, error) {
 	closeSample, err := findClosest(kc.Points, input, kc.K)
 	if err != nil {
@@ -80,6 +90,7 @@ func (kc *KNNClassifier) PredictSingle(input Datum) (Datum, error) {
 	return closeSample.Output, nil
 }
 
+// Save saves a KNNClassifier to disk.
 func (kc *KNNClassifier) Save(path string) error {
 	// Register type
 	if !gobRegistered {
@@ -101,32 +112,32 @@ func (kc *KNNClassifier) Save(path string) error {
 	return err
 }
 
-type ArgDistPair struct {
+type argDistPair struct {
 	Arg  int
 	Dist float64
 }
 
-type ArgDistPairs []ArgDistPair
+type argDistPairs []argDistPair
 
-func (adp ArgDistPairs) Len() int           { return len(adp) }
-func (adp ArgDistPairs) Swap(i, j int)      { adp[i], adp[j] = adp[j], adp[i] }
-func (adp ArgDistPairs) Less(i, j int) bool { return adp[i].Dist < adp[j].Dist }
+func (adp argDistPairs) Len() int           { return len(adp) }
+func (adp argDistPairs) Swap(i, j int)      { adp[i], adp[j] = adp[j], adp[i] }
+func (adp argDistPairs) Less(i, j int) bool { return adp[i].Dist < adp[j].Dist }
 
 func findClosest(samples []Sample, closestTo Datum, k uint) (Sample, error) {
-	pairs := make([]ArgDistPair, len(samples))
+	pairs := make([]argDistPair, len(samples))
 	for i, sample := range samples {
 		dist, err := cabiriaMath.EuclideanDistance(closestTo, sample.Input)
 		if err != nil {
 			return Sample{}, err
 		}
-		pairs[i] = ArgDistPair{i, dist}
+		pairs[i] = argDistPair{i, dist}
 	}
 	closestArgs := minKDistArg(pairs, k)
 	closestSamples := selectByArgs(samples, closestArgs)
 	return mode(closestSamples)
 }
 
-func minKDistArg(pairs ArgDistPairs, k uint) []int {
+func minKDistArg(pairs argDistPairs, k uint) []int {
 	sort.Sort(pairs)
 	var args []int
 	for i := uint(0); i < k && i < uint(len(pairs)); i++ {

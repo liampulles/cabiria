@@ -11,6 +11,9 @@ import (
 	"github.com/liampulles/cabiria/pkg/image/intertitle"
 )
 
+// ProcessData looks at all the frames (images) in framePath, computes the
+//  intensity stats for each, formats them as lines of comma seperated values
+//  and saves the lines to csvPath
 func ProcessData(framePath string, csvPath string) error {
 	// get filenames
 	files, err := ioutil.ReadDir(framePath)

@@ -21,7 +21,8 @@ const (
 	blank
 )
 
-func ReadSRT(path string) ([]subtitle.Subtitle, error) {
+// SRT loads the SRT pointed to by path into the associated Subtitle slice.
+func SRT(path string) ([]subtitle.Subtitle, error) {
 	lines, err := file.ReadLinesFromTextFile(path)
 	if err != nil {
 		return nil, err

@@ -7,10 +7,12 @@ import (
 	cabiriaTime "github.com/liampulles/cabiria/pkg/time"
 )
 
-// A group of periods can itself be considered a period - we'll implement the
-// interface here to demonstrate.
+// Periods is a slice of Period. It can itself be considered a Period (and we
+//  implement Period for Periods)... see below.
 type Periods []Period
 
+// Valid is true for Periods when there is at least one element, and all elements
+//  are themselves Valid.
 func (p Periods) Valid() bool {
 	if len(p) == 0 {
 		return false
@@ -23,6 +25,7 @@ func (p Periods) Valid() bool {
 	return true
 }
 
+// Start is the minimum start of all elements in Periods.
 func (p Periods) Start() time.Time {
 	if len(p) == 0 {
 		return time.Time{}
@@ -34,6 +37,7 @@ func (p Periods) Start() time.Time {
 	return min
 }
 
+// End is the maximum end of all elements in Periods.
 func (p Periods) End() time.Time {
 	if len(p) == 0 {
 		return time.Time{}
@@ -45,6 +49,12 @@ func (p Periods) End() time.Time {
 	return max
 }
 
+// TransformToNew scales and shifts the elements of Periods, such that
+//  the minimum start of all elements is now "start", and the maximum end
+//  of all elements is now "end". The elements are also transformed into new
+//  variants, and the relative relationship between elements is unchanged -
+//  e.g. if elements 2 and 7 were overlapping, they will continue to overlap by
+//  the same percentage after the transformation.
 func (p Periods) TransformToNew(start, end time.Time) Period {
 	// Determine bounds of many
 	manyMin := p.Start()
@@ -79,6 +89,9 @@ func shiftPeriods(periods Periods, amount time.Duration) Periods {
 	return results
 }
 
+// FixOverlaps will adjust any set of overlapping elements in many such that
+//  their bounds touch, and they share the span of their overlapping set in
+//  proportion to their original Durations.
 func FixOverlaps(many Periods) Periods {
 	if len(many) == 0 {
 		return []Period{}
@@ -99,6 +112,10 @@ func FixOverlaps(many Periods) Periods {
 	return result
 }
 
+// MergeTouching will merge any touching periods using mergeFunc.
+//  mergeFunc should return a period which has Start = a.Start() and end
+//  = b.End(), otherwise the result is not guaranteed to have non-touching
+//  elements.
 func MergeTouching(many Periods, mergeFunc func(a, b Period) Period) Periods {
 	if len(many) == 0 {
 		return []Period{}
@@ -122,6 +139,9 @@ func MergeTouching(many Periods, mergeFunc func(a, b Period) Period) Periods {
 	return result
 }
 
+// CoverGaps will close any gaps between close elements by stretching those
+//  elements to cover the gap. The degree to which the elements are stretched is
+//  determined by their original Duration.
 func CoverGaps(many Periods) Periods {
 	result := make(Periods, len(many))
 	copy(result, many)
@@ -152,8 +172,12 @@ func CoverGaps(many Periods) Periods {
 	return result
 }
 
+// Sort orders the elements naturally.
 func Sort(many Periods) {
 	sort.Slice(many, func(i, j int) bool {
+		if many[i].Start().Equal(many[j].Start()) {
+			return many[i].End().Before(many[j].End())
+		}
 		return many[i].Start().Before(many[j].Start())
 	})
 }

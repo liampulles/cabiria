@@ -15,6 +15,7 @@ type Range struct {
 	FPS        float64
 }
 
+// Valid will return true if a range is valid, otherwise false.
 func (ir Range) Valid() bool {
 	return ir.FPS > 0.0 &&
 		ir.StartFrame >= 0 &&
@@ -22,14 +23,20 @@ func (ir Range) Valid() bool {
 		ir.StartFrame <= ir.EndFrame
 }
 
+// Start returns a time representation of the start frame of a Range,
+//  using the FPS.
 func (ir Range) Start() time.Time {
 	return cabiriaTime.FromFrameAndFPS(ir.StartFrame, ir.FPS)
 }
 
+// End returns a time representation of the end frame of a Range,
+//  using the FPS.
 func (ir Range) End() time.Time {
 	return cabiriaTime.FromFrameAndFPS(ir.EndFrame, ir.FPS)
 }
 
+// TransformToNew computes a new Range given the desired start and end times,
+//  calculating frame numbers using the FPS.
 func (ir Range) TransformToNew(start, end time.Time) period.Period {
 	return Range{
 		StartFrame: fromTimeAndFPS(start, ir.FPS),
@@ -38,7 +45,9 @@ func (ir Range) TransformToNew(start, end time.Time) period.Period {
 	}
 }
 
-func MapIntertitleRanges(intertitles []bool, fps float64) []Range {
+// MapRanges takes an array of intertitle frames and an fps, and reduces it
+//  to an array of Ranges.
+func MapRanges(intertitles []bool, fps float64) []Range {
 	transitions := make([]Range, 0)
 	last := false
 	start := -1

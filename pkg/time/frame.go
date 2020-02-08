@@ -4,11 +4,11 @@ import (
 	"time"
 )
 
-var InvalidTime = time.Date(-9999, -9999, -9999, -9999, -9999, -9999, -9999, time.UTC)
-
+// FromFrameAndFPS calculates the time that a frame would display at given
+//  a certain FPS. if FPS is zero, the zero time is returned.
 func FromFrameAndFPS(frame int, fps float64) time.Time {
 	if fps == 0.0 {
-		return InvalidTime
+		return time.Time{}
 	}
 	secDec := float64(frame) / fps
 	whole := int64(secDec)

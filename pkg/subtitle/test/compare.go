@@ -8,6 +8,8 @@ import (
 	"github.com/liampulles/cabiria/pkg/subtitle"
 )
 
+// CompareSubtitles will return an error if something about two slices of subtitles
+// is not the same. Otherwise, nil is returned.
 func CompareSubtitles(actual, expected []subtitle.Subtitle) error {
 	if actual == nil || expected == nil {
 		if expected == nil && actual == nil {
@@ -31,6 +33,8 @@ func CompareSubtitles(actual, expected []subtitle.Subtitle) error {
 	return nil
 }
 
+// CompareSubtitle will return an error if something about two subtitles is not
+//  the same, otherwise nil is returned.
 func CompareSubtitle(actual, expected subtitle.Subtitle) error {
 	if actual.Text != expected.Text {
 		return fmt.Errorf("text differs: Actual: %s, Expected: %s", actual.Text, expected.Text)

@@ -9,6 +9,8 @@ type styleTagPos struct {
 	End   int
 }
 
+// RemoveStylesFromSRTText removes any formatting from the given string such that
+//  e.g. "<...>some text</...>" => "some text"
 // TODO: At the moment, encoding styles is more complexity then it is worth - so
 // rather than storing the styles in SRT text, we just seek to remove any styling.
 // One day...?

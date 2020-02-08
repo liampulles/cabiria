@@ -11,6 +11,8 @@ import (
 	"github.com/liampulles/cabiria/pkg/ml"
 )
 
+// Train loads a list of intensity stats pointed to by csvPath,
+// and trains a predictive intertitle model which is saved to modelPath
 func Train(csvPath string, modelPath string) error {
 	// Load
 	rawData, err := loadCsv(csvPath)

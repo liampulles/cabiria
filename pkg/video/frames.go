@@ -7,13 +7,13 @@ import (
 	"strings"
 )
 
-const EXTRACTED_FRAME_PREFIX = "extracted_frame"
+const extractedFramePrefix = "extracted_frame"
 
 // ExtractFrames uses FFMPEG to extract a video into frames, and returns
 // An array of ordered filepaths to the resulting PNG files.
 func ExtractFrames(videoPath string, outputDirectory string) ([]string, error) {
 	// Extract the frames
-	cmd := exec.Command("ffmpeg", "-i", videoPath, "-r", "1", path.Join(outputDirectory, EXTRACTED_FRAME_PREFIX+"%06d.png"))
+	cmd := exec.Command("ffmpeg", "-i", videoPath, "-r", "1", path.Join(outputDirectory, extractedFramePrefix+"%06d.png"))
 	err := cmd.Start()
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func ExtractFrames(videoPath string, outputDirectory string) ([]string, error) {
 	for _, file := range files {
 		filename := file.Name()
 		if !file.IsDir() &&
-			strings.HasPrefix(filename, EXTRACTED_FRAME_PREFIX) &&
+			strings.HasPrefix(filename, extractedFramePrefix) &&
 			strings.HasSuffix(filename, ".png") {
 			filenames = append(filenames, filename)
 		}

@@ -12,7 +12,7 @@ import (
 	cabiriaTime "github.com/liampulles/cabiria/pkg/time"
 )
 
-func TestReadSRT_WhenSRTValid(t *testing.T) {
+func TestSRT_WhenSRTValid(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
 		path     string
@@ -61,7 +61,7 @@ func TestReadSRT_WhenSRTValid(t *testing.T) {
 	for _, test := range tests {
 		t.Run(fmt.Sprintf("[%s]", test.path), func(t *testing.T) {
 			// Exercise SUT
-			actual, err := read.ReadSRT(path.Join("testdata", test.path))
+			actual, err := read.SRT(path.Join("testdata", test.path))
 
 			// Verify result
 			if err != nil {
