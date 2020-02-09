@@ -8,12 +8,12 @@ import (
 	"github.com/liampulles/cabiria/pkg/array"
 )
 
-func TestCloseBoolArray(t *testing.T) {
+func TestCloseBoolArrayAndOpenBoolArray(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
 		items     []bool
 		threshold uint
-		expected  []bool
+		expected  []bool // This is for close, open expected is the inversion.
 	}{
 		// Empty
 		{
@@ -244,22 +244,50 @@ func TestCloseBoolArray(t *testing.T) {
 	}
 
 	for i, test := range tests {
-		t.Run(fmt.Sprintf("[%d]", i), func(t *testing.T) {
+		closeInput := make([]bool, len(test.items))
+		copy(closeInput, test.items)
+		closeExpected := make([]bool, len(test.expected))
+		copy(closeExpected, test.expected)
+		t.Run(fmt.Sprintf("[%d]: Close", i), func(t *testing.T) {
 			// Exercise SUT
-			array.CloseBoolArray(test.items, test.threshold)
+			array.CloseBoolArray(closeInput, test.threshold)
 
 			// Verify result (must be very close)
-			if !reflect.DeepEqual(test.items, test.expected) {
-				t.Errorf("Unexpected result.\nExpected: %v\nActual: %v", test.expected, test.items)
+			if !reflect.DeepEqual(closeInput, closeExpected) {
+				t.Errorf("Unexpected result.\nExpected: %v\nActual: %v", closeExpected, closeInput)
+			}
+		})
+
+		openInput := make([]bool, len(test.items))
+		copy(openInput, test.items)
+		openInput = invert(openInput)
+		openExpected := make([]bool, len(test.expected))
+		copy(openExpected, test.expected)
+		openExpected = invert(openExpected)
+		t.Run(fmt.Sprintf("[%d]: Open", i), func(t *testing.T) {
+			// Exercise SUT
+			array.OpenBoolArray(openInput, test.threshold)
+
+			// Verify result (must be very close)
+			if !reflect.DeepEqual(openInput, openExpected) {
+				t.Errorf("Unexpected result.\nExpected: %v\nActual: %v", openExpected, openInput)
 			}
 		})
 	}
 }
 
-func bools(vals ...int) []bool {
-	bools := make([]bool, len(vals))
-	for i, val := range vals {
-		bools[i] = val > 0
+func bools(items ...int) []bool {
+	bools := make([]bool, len(items))
+	for i, item := range items {
+		bools[i] = item > 0
 	}
 	return bools
+}
+
+func invert(items []bool) []bool {
+	result := make([]bool, len(items))
+	for i, elem := range items {
+		result[i] = !elem
+	}
+	return result
 }

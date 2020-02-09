@@ -326,14 +326,6 @@ func interRanges(interRanges ...intertitle.Range) []intertitle.Range {
 	return append(result, interRanges...)
 }
 
-func intertitles(onOff ...int) []bool {
-	var result []bool
-	for _, elem := range onOff {
-		result = append(result, elem == 1)
-	}
-	return result
-}
-
 func timestamp(hour, min, sec, milli int) time.Time {
 	return time.Date(0, time.January, 1, hour, min, sec, milli*1e+6, time.UTC)
 }

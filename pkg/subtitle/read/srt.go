@@ -37,10 +37,10 @@ func SRT(path string) ([]subtitle.Subtitle, error) {
 		currentLineType := getLineType(line, lastLineType)
 		switch currentLineType {
 		case blank, index:
-			subs = closeAndAddCurrent(currentStart, currEnd, currentLines, subs)
+			subs = closeAndAddCurrent(currentStart, currentEnd, currentLines, subs)
 			currentLines = nil
 		case timecodes:
-			currentStart, currEnd, err = getTimecodes(line)
+			currentStart, currentEnd, err = getTimecodes(line)
 			if err != nil {
 				return nil, err
 			}
@@ -49,7 +49,7 @@ func SRT(path string) ([]subtitle.Subtitle, error) {
 		}
 		lastLineType = currentLineType
 	}
-	subs = closeAndAddCurrent(currentStart, currEnd, currentLines, subs)
+	subs = closeAndAddCurrent(currentStart, currentEnd, currentLines, subs)
 	return subs, nil
 }
 

@@ -1,8 +1,8 @@
 package array
 
 // CloseBoolArray will close any "gaps" in the array if the gap is smaller
-// than the threshold.
-// Threshold must be larger than 1, otherwise the items will be unchanged.
+//  than the threshold.
+//  threshold must be larger than 1, otherwise the items will be unchanged.
 func CloseBoolArray(items []bool, threshold uint) {
 	lastOn := len(items)
 	for currentOn, isOn := range items {

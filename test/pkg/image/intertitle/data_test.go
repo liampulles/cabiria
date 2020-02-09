@@ -5,7 +5,10 @@ import (
 	"image/color"
 	"math"
 	"path/filepath"
+	"reflect"
 	"testing"
+
+	"github.com/liampulles/cabiria/pkg/ml"
 
 	"github.com/liampulles/cabiria/pkg/image"
 
@@ -80,6 +83,40 @@ func TestGetIntensityStats(t *testing.T) {
 				if !veryClose(check[0], check[1]) {
 					t.Errorf("Unexpected result.\nExpected: %f\nActual: %f", check[1], check[0])
 				}
+			}
+		})
+	}
+}
+
+func TestAsInput(t *testing.T) {
+	// Setup fixture
+	var tests = []struct {
+		fixture  intertitle.IntensityStats
+		expected ml.Datum
+	}{
+		{
+			intertitle.IntensityStats{
+				AvgIntensity:       1.0,
+				LowerAvgIntensity:  2.0,
+				MiddleAvgIntensity: 3.0,
+				UpperAvgIntensity:  4.0,
+				ProportionLower:    5.0,
+				ProportionMiddle:   6.0,
+				ProportionUpper:    7.0,
+			},
+			[]float64{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(fmt.Sprintf("%v => %v", test.fixture, test.expected), func(t *testing.T) {
+
+			// Exercise SUT
+			actual := test.fixture.AsInput()
+
+			// Verify result (must be very close)
+			if !reflect.DeepEqual(actual, test.expected) {
+				t.Errorf("Unexpected result.\nExpected: %f\nActual: %f", test.expected, actual)
 			}
 		})
 	}

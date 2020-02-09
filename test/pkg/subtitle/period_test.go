@@ -2,6 +2,7 @@ package subtitle_test
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 	"time"
 
@@ -129,7 +130,7 @@ func TestTransformToNew(t *testing.T) {
 			actual := test.subtitle.TransformToNew(test.start, test.end)
 
 			// Verify result
-			if actual != test.expected {
+			if !reflect.DeepEqual(actual, test.expected) {
 				t.Errorf("Result differs. Actual: %v, Expected %v", actual, test.expected)
 			}
 		})

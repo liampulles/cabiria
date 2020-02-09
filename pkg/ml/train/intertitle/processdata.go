@@ -49,16 +49,14 @@ func dataLineForFrame(path string, current image.Image) string {
 	file := filepath.Base(path)
 
 	// Inputs
-	stats := intertitle.GetIntensityStats(current)
+	stats := intertitle.GetIntensityStats(current).AsInput().AsCSV()
 	// Outputs
 	isIntertitle := 0.0
 	if strings.Contains(file, "intertitle") {
 		isIntertitle = 1.0
 	}
 	// Print
-	return fmt.Sprintf("%f,%f,%f,%f,%f,%f,%f,%f\n",
-		stats.AvgIntensity, stats.LowerAvgIntensity, stats.MiddleAvgIntensity, stats.UpperAvgIntensity, stats.ProportionLower, stats.ProportionMiddle, stats.ProportionUpper,
-		isIntertitle)
+	return fmt.Sprintf("%s,%f\n", stats, isIntertitle)
 }
 
 func writeToFile(data string, path string) error {

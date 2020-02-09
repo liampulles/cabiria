@@ -1,7 +1,7 @@
 package intertitle
 
 import (
-	"fmt"
+	"github.com/liampulles/cabiria/pkg/ml"
 
 	cabiriaImage "github.com/liampulles/cabiria/pkg/image"
 	cabiriaMath "github.com/liampulles/cabiria/pkg/math"
@@ -23,7 +23,8 @@ type IntensityStats struct {
 	ProportionUpper    float64
 }
 
-func (is IntensityStats) asInput() []float64 {
+// AsInput maps intensity statistics to a Datum for ML purposes
+func (is IntensityStats) AsInput() ml.Datum {
 	return []float64{
 		is.AvgIntensity,
 		is.LowerAvgIntensity,
@@ -33,12 +34,6 @@ func (is IntensityStats) asInput() []float64 {
 		is.ProportionMiddle,
 		is.ProportionUpper,
 	}
-}
-
-func (is IntensityStats) asCSV() string {
-	return fmt.Sprintf("%f,%f,%f,%f,%f,%f,%f",
-		is.AvgIntensity, is.LowerAvgIntensity, is.MiddleAvgIntensity,
-		is.UpperAvgIntensity, is.ProportionLower, is.ProportionMiddle, is.ProportionUpper)
 }
 
 // GetIntensityStats extracts intensity statistics from an image.

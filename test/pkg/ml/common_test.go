@@ -261,6 +261,47 @@ func TestMatch_WhenGivenValidInput_ExpectToPass(t *testing.T) {
 	}
 }
 
+func TestAsCSV(t *testing.T) {
+	// Setup fixture
+	var tests = []struct {
+		fixture  ml.Datum
+		expected string
+	}{
+		{
+			nil,
+			"",
+		},
+		{
+			[]float64{},
+			"",
+		},
+		{
+			[]float64{1.0},
+			"1",
+		},
+		{
+			[]float64{0.00000000000000001},
+			"0.00000000000000001",
+		},
+		{
+			[]float64{1.0, 2.1, 3.21, 4.321},
+			"1,2.1,3.21,4.321",
+		},
+	}
+
+	for i, test := range tests {
+		t.Run(fmt.Sprintf("[%d]", i), func(t *testing.T) {
+			// Exercise SUT
+			actual := test.fixture.AsCSV()
+
+			// Verify result
+			if actual != test.expected {
+				t.Errorf("Unexpected result.\nExpected: %s\nActual: %s", test.expected, actual)
+			}
+		})
+	}
+}
+
 type MockClassifier struct{}
 
 func (mc MockClassifier) Fit(samples []ml.Sample) error {

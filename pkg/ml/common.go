@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"strconv"
 
 	cabiriaMath "github.com/liampulles/cabiria/pkg/math"
 )
@@ -50,4 +51,16 @@ func Match(actual Datum, expected Datum) (bool, error) {
 		}
 	}
 	return true, nil
+}
+
+// AsCSV maps a datum to a CSV line for ML purposes.
+func (d Datum) AsCSV() string {
+	result := ""
+	for i, elem := range d {
+		if i > 0 {
+			result = result + ","
+		}
+		result = result + strconv.FormatFloat(elem, 'f', -1, 64)
+	}
+	return result
 }

@@ -18,7 +18,7 @@ func TestFromFrameAndFPS(t *testing.T) {
 		{
 			0,
 			0.0,
-			cabiriaTime.InvalidTime,
+			time.Time{},
 		},
 		{
 			0,
@@ -28,7 +28,7 @@ func TestFromFrameAndFPS(t *testing.T) {
 		{
 			1,
 			0.0,
-			cabiriaTime.InvalidTime,
+			time.Time{},
 		},
 		{
 			1,
