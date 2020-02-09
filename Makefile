@@ -14,5 +14,7 @@ install: build
 	go install ./...
 inspect: build
 	golint ./...
+pre-commit: clean coverage.txt inspect
+	go mod tidy
 clean:
 	rm coverage.txt

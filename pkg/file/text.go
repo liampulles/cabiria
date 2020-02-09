@@ -26,3 +26,16 @@ func ReadLinesFromTextFile(path string) ([]string, error) {
 
 	return lines, nil
 }
+
+// SaveTextToFile writes a string to the location pointed to by path,
+//  overwriting any existign files.
+func SaveTextToFile(path string, text string) error {
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = file.WriteString(text)
+	return err
+}
