@@ -36,7 +36,7 @@ func TestGetForegroundAndBackground(t *testing.T) {
 		},
 		// Non-tinted image
 		{
-			loadImage("testdata/nibelungen.png"),
+			loadImage("testdata/viking.png"),
 			colorFromRGB(177, 174, 172),
 			colorFromRGB(1, 1, 1),
 		},

@@ -1,7 +1,6 @@
 package image
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 
@@ -17,8 +16,7 @@ const (
 func GetForegroundAndBackground(img image.Image) (color.Color, color.Color, error) {
 	// Use KMeans to quantize image into two centroids.
 	kMeans := cluster.NewKMeansClassifier(2, 5000)
-	counts, iter, err := kMeans.Fit(allPixelsAsDatum(img))
-	fmt.Printf("%d\n", iter)
+	counts, _, err := kMeans.Fit(allPixelsAsDatum(img))
 	if err != nil {
 		return nil, nil, err
 	}

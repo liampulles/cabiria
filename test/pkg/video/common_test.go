@@ -15,7 +15,7 @@ func TestGetBasicInformation_ForExistingVideo(t *testing.T) {
 	}
 
 	// Exercise SUT
-	actual, err := video.GetBasicInformation("testdata/Po-zakonu.mkv")
+	actual, err := video.GetBasicInformation("testdata/By-The-Law.mkv")
 
 	// Verify result
 	if err != nil {

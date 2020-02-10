@@ -71,7 +71,7 @@ func TestQueryWithMediaInfo_WhenExistsAndParametersValid(t *testing.T) {
 	for _, test := range tests {
 		t.Run(fmt.Sprintf("%v -> %v", test.videoParameters, test.expected), func(t *testing.T) {
 			// Exercise SUT
-			actual, err := video.QueryWithMediaInfo("testdata/Po-zakonu.mkv", test.videoParameters)
+			actual, err := video.QueryWithMediaInfo("testdata/By-The-Law.mkv", test.videoParameters)
 
 			// Verify result
 			if err != nil {
@@ -103,7 +103,7 @@ func TestQueryWithMediaInfo_WhenParameterInvalid(t *testing.T) {
 	for _, test := range tests {
 		t.Run(fmt.Sprintf("%v", test.videoParameters), func(t *testing.T) {
 			// Exercise SUT
-			_, err := video.QueryWithMediaInfo("testdata/Po-zakonu.mkv", test.videoParameters)
+			_, err := video.QueryWithMediaInfo("testdata/By-The-Law.mkv", test.videoParameters)
 
 			// Verify result
 			if err == nil {

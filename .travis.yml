@@ -3,5 +3,13 @@ language: go
 go:
 - master
 
+os:
+  - linux
+dist: trusty
+before_install:
+  - sudo add-apt-repository -y ppa:mc3man/trusty-media; fi
+  - sudo apt-get update; fi
+  - sudo apt-get install -y ffmpeg mediainfo; fi
+
 after_success:
   - bash <(curl -s https://codecov.io/bash)

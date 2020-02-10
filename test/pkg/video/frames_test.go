@@ -36,7 +36,7 @@ func TestExtractFrames_ForExistingVideo(t *testing.T) {
 	}
 
 	// Exercise SUT
-	actual, err := video.ExtractFrames("testdata/Po-zakonu.mkv", "testFrames")
+	actual, err := video.ExtractFrames("testdata/By-The-Law.mkv", "testFrames")
 
 	// Verify result
 	if err != nil {
