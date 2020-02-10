@@ -1,6 +1,7 @@
 package intertitle
 
 import (
+	"fmt"
 	"image"
 
 	"github.com/liampulles/cabiria/pkg/image/intertitle"
@@ -32,6 +33,19 @@ func (p Predictor) Predict(frames []image.Image) ([]bool, error) {
 	return mapPredictionsToIntertitles(predictions), nil
 }
 
+// PredictSingle guesses whether a frame is an intertitle
+func (p Predictor) PredictSingle(frame image.Image) (bool, error) {
+	if frame == nil {
+		return false, fmt.Errorf("cannot predict on nil images")
+	}
+	datum := intertitle.GetIntensityStats(frame).AsInput()
+	prediction, err := p.Predictor.PredictSingle(datum)
+	if err != nil {
+		return false, err
+	}
+	return mapPredictionToIntertitle(prediction), nil
+}
+
 func mapFramesToInput(frames []image.Image) []ml.Datum {
 	stats := make([]ml.Datum, len(frames))
 	for i, elem := range frames {
@@ -43,9 +57,13 @@ func mapFramesToInput(frames []image.Image) []ml.Datum {
 func mapPredictionsToIntertitles(predictions []ml.Datum) []bool {
 	intertitles := make([]bool, len(predictions))
 	for i, elem := range predictions {
-		// The output should just be a single element, which is 1.0 if
-		//  an intertitle is predicted, 0.0 if not.
-		intertitles[i] = elem[0] > 0.5
+		intertitles[i] = mapPredictionToIntertitle(elem)
 	}
 	return intertitles
+}
+
+func mapPredictionToIntertitle(prediction ml.Datum) bool {
+	// The output should just be a single element, which is 1.0 if
+	//  an intertitle is predicted, 0.0 if not.
+	return prediction[0] > 0.5
 }

@@ -53,6 +53,30 @@ func Match(actual Datum, expected Datum) (bool, error) {
 	return true, nil
 }
 
+// InitializeKMeans implements the init step for KMeans++ (at least,
+//  it implements whatever this GeeksForGeeks article says:
+//	https://www.geeksforgeeks.org/ml-k-means-algorithm/)
+func InitializeKMeans(input []Datum, k int) ([]Datum, error) {
+	if k == 0 {
+		return []Datum{}, nil
+	}
+	if len(input) < k {
+		return nil, fmt.Errorf("need at least k input to initialize KMeans")
+	}
+	centroids := make([]Datum, 1)
+	// Effectively choose a pseudo-random element, but don;t change in-between
+	// runs so our tests remian deterministic
+	centroids[0] = input[1820244659%len(input)]
+	for len(centroids) < k {
+		newCentroid, err := computeNextBestCentroid(centroids, input)
+		if err != nil {
+			return nil, err
+		}
+		centroids = append(centroids, newCentroid)
+	}
+	return centroids, nil
+}
+
 // AsCSV maps a datum to a CSV line for ML purposes.
 func (d Datum) AsCSV() string {
 	result := ""
@@ -63,4 +87,34 @@ func (d Datum) AsCSV() string {
 		result = result + strconv.FormatFloat(elem, 'f', -1, 64)
 	}
 	return result
+}
+
+func computeNextBestCentroid(centroids []Datum, input []Datum) (Datum, error) {
+	largestSquareDist := -1.0
+	largestIdx := -1
+	for i, elem := range input {
+		squareDist, err := squareDistanceToClosestCentroid(centroids, elem)
+		if err != nil {
+			return nil, err
+		}
+		if squareDist > largestSquareDist {
+			largestSquareDist = squareDist
+			largestIdx = i
+		}
+	}
+	return input[largestIdx], nil
+}
+
+func squareDistanceToClosestCentroid(centroids []Datum, elem Datum) (float64, error) {
+	min := math.MaxFloat64
+	for _, centroid := range centroids {
+		squareDist, err := cabiriaMath.SquareDistance(elem, centroid)
+		if err != nil {
+			return -1.0, err
+		}
+		if squareDist < min {
+			min = squareDist
+		}
+	}
+	return min, nil
 }

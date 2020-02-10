@@ -105,6 +105,52 @@ func TestPredict(t *testing.T) {
 	}
 }
 
+func TestPredictSingle(t *testing.T) {
+	// Setup fixture
+	predictor := testPredictor()
+	var tests = []struct {
+		frame    image.Image
+		expected bool
+	}{
+		{
+			whiteImage(),
+			true,
+		},
+		{
+			blackImage(),
+			false,
+		},
+	}
+
+	for i, test := range tests {
+		t.Run(fmt.Sprintf("[%d]", i), func(t *testing.T) {
+			// Exercise SUT
+			actual, err := predictor.PredictSingle(test.frame)
+
+			// Verify result
+			if err != nil {
+				t.Errorf("SUT returned an error: %v", err)
+			}
+			if actual != test.expected {
+				t.Errorf("Result differs. Actual: %v, Expected %v", actual, test.expected)
+			}
+		})
+	}
+}
+
+func TestPredictSingle_WhenNilFrame(t *testing.T) {
+	// Setup fixture
+	predictor := testPredictor()
+
+	// Exercise SUT
+	_, err := predictor.PredictSingle(nil)
+
+	// Verify result
+	if err == nil {
+		t.Errorf("Expected SUT to return an error")
+	}
+}
+
 func testPredictor() intertitle.Predictor {
 	dummy := test.DummyPredictor{}
 	dummy.Fit([]ml.Sample{

@@ -2,13 +2,12 @@ package math_test
 
 import (
 	"fmt"
-	"math"
 	"testing"
 
 	cabiriaMath "github.com/liampulles/cabiria/pkg/math"
 )
 
-func TestEuclideanDistance_ValidInput_ShouldPass(t *testing.T) {
+func TestSquareDistance_ValidInput_ShouldPass(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
 		a        []float64
@@ -33,19 +32,19 @@ func TestEuclideanDistance_ValidInput_ShouldPass(t *testing.T) {
 		{
 			[]float64{0.0, 0.0},
 			[]float64{1.0, 1.0},
-			math.Sqrt(2.0),
+			2.0,
 		},
 		{
 			[]float64{-1.0, 2.0},
 			[]float64{2.0, -2.0},
-			5.0,
+			25.0,
 		},
 	}
 
 	for _, test := range tests {
 		t.Run(fmt.Sprintf("(%v,%v) -> %f", test.a, test.b, test.expected), func(t *testing.T) {
 			// Exercise SUT
-			actual, err := cabiriaMath.EuclideanDistance(test.a, test.b)
+			actual, err := cabiriaMath.SquareDistance(test.a, test.b)
 
 			// Verify result
 			if err != nil {
@@ -58,7 +57,7 @@ func TestEuclideanDistance_ValidInput_ShouldPass(t *testing.T) {
 	}
 }
 
-func TestEuclideanDistance_InputWithDifferentLength_ShouldFail(t *testing.T) {
+func TestSquareDistance_InputWithDifferentLength_ShouldFail(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
 		a []float64
@@ -85,7 +84,7 @@ func TestEuclideanDistance_InputWithDifferentLength_ShouldFail(t *testing.T) {
 	for _, test := range tests {
 		t.Run(fmt.Sprintf("(%v,%v)", test.a, test.b), func(t *testing.T) {
 			// Exercise SUT
-			_, err := cabiriaMath.EuclideanDistance(test.a, test.b)
+			_, err := cabiriaMath.SquareDistance(test.a, test.b)
 
 			// Verify result
 			if err == nil {

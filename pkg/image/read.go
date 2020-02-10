@@ -17,16 +17,3 @@ func GetPNG(filePath string) (image.Image, error) {
 	image, _, err := image.Decode(f)
 	return image, err
 }
-
-// GetPNGs can load multiple PNG files from disk into memory
-func GetPNGs(filePaths []string) ([]image.Image, error) {
-	images := make([]image.Image, len(filePaths))
-	for i, filePath := range filePaths {
-		img, err := GetPNG(filePath)
-		if err != nil {
-			return nil, err
-		}
-		images[i] = img
-	}
-	return images, nil
-}

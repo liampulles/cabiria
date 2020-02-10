@@ -126,7 +126,7 @@ func (adp argDistPairs) Less(i, j int) bool { return adp[i].Dist < adp[j].Dist }
 func findClosest(samples []Sample, closestTo Datum, k uint) (Sample, error) {
 	pairs := make([]argDistPair, len(samples))
 	for i, sample := range samples {
-		dist, err := cabiriaMath.EuclideanDistance(closestTo, sample.Input)
+		dist, err := cabiriaMath.SquareDistance(closestTo, sample.Input)
 		if err != nil {
 			return Sample{}, err
 		}

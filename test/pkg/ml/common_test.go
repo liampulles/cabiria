@@ -3,6 +3,7 @@ package ml_test
 import (
 	"fmt"
 	"math"
+	"reflect"
 	"testing"
 
 	"github.com/liampulles/cabiria/pkg/ml"
@@ -261,6 +262,60 @@ func TestMatch_WhenGivenValidInput_ExpectToPass(t *testing.T) {
 	}
 }
 
+func TestInitializeKMeans_WhenKIsZero(t *testing.T) {
+	// Setup expectations
+	expected := []ml.Datum{}
+
+	// Exercise SUT
+	actual, err := ml.InitializeKMeans(datums(datum(1.0, 2.0), datum(2.0, 3.0)), 0)
+
+	// Verify result
+	if err != nil {
+		t.Errorf("SUT threw an error: %v", err)
+	}
+	if !reflect.DeepEqual(actual, expected) {
+		t.Errorf("Unexpected result.\nExpected: %v\nActual: %v", expected, actual)
+	}
+}
+
+func TestInitializeKMeans_WhenInputLengthLessThanK(t *testing.T) {
+	// Setup fixture
+	var tests = []struct {
+		input []ml.Datum
+		k     int
+	}{
+		{
+			datums(),
+			1,
+		},
+		{
+			datums(
+				datum(1.0),
+			),
+			2,
+		},
+		{
+			datums(
+				datum(1.0),
+				datum(2.0),
+			),
+			5,
+		},
+	}
+
+	for i, test := range tests {
+		t.Run(fmt.Sprintf("[%d]", i), func(t *testing.T) {
+			// Exercise SUT
+			_, err := ml.InitializeKMeans(test.input, test.k)
+
+			// Verify result
+			if err == nil {
+				t.Errorf("Expected SUT to return an error")
+			}
+		})
+	}
+}
+
 func TestAsCSV(t *testing.T) {
 	// Setup fixture
 	var tests = []struct {
@@ -349,4 +404,12 @@ func falsePositive() ml.Sample {
 
 func falseNegative() ml.Sample {
 	return sample([]float64{1.0}, []float64{0})
+}
+
+func datums(datums ...ml.Datum) []ml.Datum {
+	return datums
+}
+
+func datum(val ...float64) ml.Datum {
+	return val
 }

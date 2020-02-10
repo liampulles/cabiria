@@ -12,7 +12,7 @@ import (
 func main() {
 	config, err := input.GetGenerateConfiguration()
 	failIf(err)
-	videoInfo, err := core.ExtractVideoInformation(config)
+	videoInfo, err := core.ExtractVideoInformation(&config)
 	failIf(err)
 	subsInfo, err := core.ExtractSubtitlesInformation(config)
 	failIf(err)

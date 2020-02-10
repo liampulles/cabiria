@@ -9,9 +9,9 @@ import (
 // GenerateConfiguration provides configuration options necessary
 //  for generating pretty subtitles from an input video and subtitle
 type GenerateConfiguration struct {
-	VideoPath string
-	SRTPath   string
-	ASSPath   string
+	videoPath string
+	srtPath   string
+	assPath   string
 }
 
 // GetGenerateConfiguration parses the command line to provide config
@@ -34,10 +34,38 @@ func GetGenerateConfiguration() (GenerateConfiguration, error) {
 	}
 
 	return GenerateConfiguration{
-		VideoPath: *video,
-		SRTPath:   *srt,
-		ASSPath:   *ass,
+		videoPath: *video,
+		srtPath:   *srt,
+		assPath:   *ass,
 	}, nil
+}
+
+// VideoPath is the path to the input video
+func (gc *GenerateConfiguration) VideoPath() string {
+	return gc.videoPath
+}
+
+// FrameOutputDirectory is the temporary directory where frames will be extracted to.
+func (gc *GenerateConfiguration) FrameOutputDirectory() string {
+	//TODO: Check this folder gets deleted
+	return "/tmp/cabiria/extractedFrames"
+}
+
+// PredictorPath points to the ml.Predictor model used to predict intertitles
+func (gc *GenerateConfiguration) PredictorPath() string {
+	return "/etc/cabiria/intertitlePredictor.model"
+}
+
+// SmoothingClosingThreshold defines the upper bound for a gap in intertitles
+//  to be closed
+func (gc *GenerateConfiguration) SmoothingClosingThreshold() uint {
+	return 15
+}
+
+// SmoothingOpeningThreshold defines the minimum length of an intertitle to be
+//  kept
+func (gc *GenerateConfiguration) SmoothingOpeningThreshold() uint {
+	return 15
 }
 
 func defaultASS(srt *string) *string {

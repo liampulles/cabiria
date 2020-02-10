@@ -35,7 +35,7 @@ func ExtractFrames(videoPath string, outputDirectory string) ([]string, error) {
 		if !file.IsDir() &&
 			strings.HasPrefix(filename, extractedFramePrefix) &&
 			strings.HasSuffix(filename, ".png") {
-			filenames = append(filenames, filename)
+			filenames = append(filenames, path.Join(outputDirectory, filename))
 		}
 	}
 	return filenames, nil

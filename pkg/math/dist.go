@@ -2,12 +2,11 @@ package math
 
 import (
 	"fmt"
-	"math"
 )
 
-// EuclideanDistance calculates the euclidean distance between the coordinates
+// SquareDistance calculates the square distance between the coordinates
 // a and b. If a and b are different sizes, an error is returned.
-func EuclideanDistance(a []float64, b []float64) (float64, error) {
+func SquareDistance(a []float64, b []float64) (float64, error) {
 	if a == nil {
 		return -1.0, fmt.Errorf("a may not be nil")
 	}
@@ -16,7 +15,7 @@ func EuclideanDistance(a []float64, b []float64) (float64, error) {
 	}
 	if len(a) != len(b) {
 		return -1.0,
-			fmt.Errorf("a and b have differet lengths. a length: %d, b length: %d",
+			fmt.Errorf("a and b have different lengths. a length: %d, b length: %d",
 				len(a), len(b))
 	}
 	total := 0.0
@@ -25,5 +24,5 @@ func EuclideanDistance(a []float64, b []float64) (float64, error) {
 		diff := ai - bi
 		total += diff * diff
 	}
-	return math.Sqrt(total), nil
+	return total, nil
 }
