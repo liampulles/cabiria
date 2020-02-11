@@ -13,9 +13,6 @@ import (
 //  intertitle segment in the film - barring some edge cases arising due to
 //  imperfect data.
 func AlignSubtitles(subs []Subtitle, interRanges []intertitle.Range) []Subtitle {
-	// TODO: Remove merging
-	// TODO: Only return subs
-	// TODO: Get styles in interranges before, maybe even in mapRanges
 	// TODO: Copy over style from ranges to associated subs.
 	// TODO: Make sure subs get a style, even default if not overlapping.
 	joined := rangedSortedSet(subs, interRanges)

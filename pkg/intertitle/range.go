@@ -3,6 +3,7 @@ package intertitle
 import (
 	"time"
 
+	cabiriaImage "github.com/liampulles/cabiria/pkg/image"
 	cabiriaTime "github.com/liampulles/cabiria/pkg/time"
 	"github.com/liampulles/cabiria/pkg/time/period"
 )
@@ -13,6 +14,7 @@ type Range struct {
 	StartFrame int
 	EndFrame   int
 	FPS        float64
+	Style      Style
 }
 
 // Valid will return true if a range is valid, otherwise false.
@@ -47,7 +49,7 @@ func (ir Range) TransformToNew(start, end time.Time) period.Period {
 
 // MapRanges takes an array of intertitle frames and an fps, and reduces it
 //  to an array of Ranges.
-func MapRanges(intertitles []bool, fps float64) []Range {
+func MapRanges(intertitles []bool, fps float64, framePaths []string) ([]Range, error) {
 	transitions := make([]Range, 0)
 	last := false
 	start := -1
@@ -58,17 +60,25 @@ func MapRanges(intertitles []bool, fps float64) []Range {
 		}
 		// End of intertitle
 		if last && !current {
-			transitions = appendIntertitle(transitions, start, i-1, fps)
+			style, err := getStyle(start, i-1, framePaths)
+			if err != nil {
+				return nil, err
+			}
+			transitions = appendIntertitle(transitions, start, i-1, fps, style)
 			start = -1
 		}
 		last = current
 	}
 	// Close off end, if applicable
-	transitions = appendIntertitle(transitions, start, len(intertitles)-1, fps)
-	return transitions
+	style, err := getStyle(start, len(intertitles)-1, framePaths)
+	if err != nil {
+		return nil, err
+	}
+	transitions = appendIntertitle(transitions, start, len(intertitles)-1, fps, style)
+	return transitions, nil
 }
 
-func appendIntertitle(transitions []Range, start, end int, fps float64) []Range {
+func appendIntertitle(transitions []Range, start, end int, fps float64, style Style) []Range {
 	if start < 0 {
 		return transitions
 	}
@@ -76,6 +86,7 @@ func appendIntertitle(transitions []Range, start, end int, fps float64) []Range 
 		StartFrame: start,
 		EndFrame:   end,
 		FPS:        fps,
+		Style:      style,
 	}
 	return append(transitions, new)
 }
@@ -87,4 +98,24 @@ func fromTimeAndFPS(t time.Time, fps float64) int {
 	nano := time.Duration(t.Nanosecond()) * time.Nanosecond
 	totalSeconds := float64(hours+minutes+seconds+nano) / float64(time.Second)
 	return int(totalSeconds * fps)
+}
+
+func getStyle(start, end int, framePaths []string) (Style, error) {
+	if start < 0 {
+		return Style{}, nil
+	}
+
+	midPoint := (start + end) / 2
+	img, err := cabiriaImage.GetPNG(framePaths[midPoint])
+	if err != nil {
+		return Style{}, err
+	}
+	foreground, background, err := cabiriaImage.GetForegroundAndBackground(img)
+	if err != nil {
+		return Style{}, err
+	}
+	return Style{
+		ForegroundColor: foreground,
+		BackgroundColor: background,
+	}, nil
 }

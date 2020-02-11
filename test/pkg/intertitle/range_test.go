@@ -2,6 +2,7 @@ package intertitle_test
 
 import (
 	"fmt"
+	"image/color"
 	"reflect"
 	"testing"
 	"time"
@@ -227,28 +228,28 @@ func TestMapRanges(t *testing.T) {
 			intertitles(1),
 			1.0,
 			interRanges(
-				interRange(0, 0, 1.0),
+				interRangeWithStyle(0, 0, 1.0, style(white(), white())),
 			),
 		},
 		{
 			intertitles(1, 0),
 			1.0,
 			interRanges(
-				interRange(0, 0, 1.0),
+				interRangeWithStyle(0, 0, 1.0, style(white(), white())),
 			),
 		},
 		{
 			intertitles(0, 1),
 			1.0,
 			interRanges(
-				interRange(1, 1, 1.0),
+				interRangeWithStyle(1, 1, 1.0, style(black(), black())),
 			),
 		},
 		{
 			intertitles(0, 1, 0),
 			1.0,
 			interRanges(
-				interRange(1, 1, 1.0),
+				interRangeWithStyle(1, 1, 1.0, style(black(), black())),
 			),
 		},
 		// A multiple
@@ -256,35 +257,35 @@ func TestMapRanges(t *testing.T) {
 			intertitles(1, 1),
 			1.0,
 			interRanges(
-				interRange(0, 1, 1.0),
+				interRangeWithStyle(0, 1, 1.0, style(white(), white())),
 			),
 		},
 		{
 			intertitles(1, 1, 1),
 			1.0,
 			interRanges(
-				interRange(0, 2, 1.0),
+				interRangeWithStyle(0, 2, 1.0, style(black(), black())),
 			),
 		},
 		{
 			intertitles(1, 1, 0),
 			1.0,
 			interRanges(
-				interRange(0, 1, 1.0),
+				interRangeWithStyle(0, 1, 1.0, style(white(), white())),
 			),
 		},
 		{
 			intertitles(0, 1, 1),
 			1.0,
 			interRanges(
-				interRange(1, 2, 1.0),
+				interRangeWithStyle(1, 2, 1.0, style(black(), black())),
 			),
 		},
 		{
 			intertitles(0, 1, 1, 0),
 			1.0,
 			interRanges(
-				interRange(1, 2, 1.0),
+				interRangeWithStyle(1, 2, 1.0, style(black(), black())),
 			),
 		},
 		// Complex case
@@ -292,10 +293,10 @@ func TestMapRanges(t *testing.T) {
 			intertitles(1, 0, 1, 1, 1, 0, 1, 0, 1, 1),
 			1.0,
 			interRanges(
-				interRange(0, 0, 1.0),
-				interRange(2, 4, 1.0),
-				interRange(6, 6, 1.0),
-				interRange(8, 9, 1.0),
+				interRangeWithStyle(0, 0, 1.0, style(white(), white())),
+				interRangeWithStyle(2, 4, 1.0, style(black(), black())),
+				interRangeWithStyle(6, 6, 1.0, style(white(), white())),
+				interRangeWithStyle(8, 9, 1.0, style(white(), white())),
 			),
 		},
 	}
@@ -303,14 +304,25 @@ func TestMapRanges(t *testing.T) {
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("[%d]", i), func(t *testing.T) {
 			// Exercise SUT
-			actual := intertitle.MapRanges(test.intertitles, test.fps)
+			actual, err := intertitle.MapRanges(test.intertitles, test.fps, framePaths())
 
 			// Verify result
+			if err != nil {
+				t.Errorf("SUT returned an error: %v", err)
+			}
 			if !reflect.DeepEqual(actual, test.expected) {
 				t.Errorf("Result differs. Actual: %v, Expected %v", actual, test.expected)
 			}
 		})
 	}
+}
+
+func framePaths() []string {
+	var result []string
+	for i := 0; i < 10; i++ {
+		result = append(result, fmt.Sprintf("testdata/frames/%d.png", i))
+	}
+	return result
 }
 
 func interRange(start, end int, fps float64) intertitle.Range {
@@ -321,6 +333,15 @@ func interRange(start, end int, fps float64) intertitle.Range {
 	}
 }
 
+func interRangeWithStyle(start, end int, fps float64, style intertitle.Style) intertitle.Range {
+	return intertitle.Range{
+		StartFrame: start,
+		EndFrame:   end,
+		FPS:        fps,
+		Style:      style,
+	}
+}
+
 func interRanges(interRanges ...intertitle.Range) []intertitle.Range {
 	result := make([]intertitle.Range, 0)
 	return append(result, interRanges...)
@@ -328,4 +349,29 @@ func interRanges(interRanges ...intertitle.Range) []intertitle.Range {
 
 func timestamp(hour, min, sec, milli int) time.Time {
 	return time.Date(0, time.January, 1, hour, min, sec, milli*1e+6, time.UTC)
+}
+
+func style(foreground, background color.Color) intertitle.Style {
+	return intertitle.Style{
+		ForegroundColor: foreground,
+		BackgroundColor: background,
+	}
+}
+
+func white() color.Color {
+	return color.RGBA{
+		255,
+		255,
+		255,
+		255,
+	}
+}
+
+func black() color.Color {
+	return color.RGBA{
+		0,
+		0,
+		0,
+		255,
+	}
 }

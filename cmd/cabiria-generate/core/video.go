@@ -49,7 +49,10 @@ func ExtractVideoInformation(config ExtractVideoConfiguration) (VideoInformation
 	}
 
 	// Extract intertitle timings
-	interRanges := intertitle.MapRanges(predictions, basicInfo.FPS)
+	interRanges, err := intertitle.MapRanges(predictions, basicInfo.FPS, framePaths)
+	if err != nil {
+		return VideoInformation{}, err
+	}
 
 	return VideoInformation{
 		VideoFPS:         basicInfo.FPS,
