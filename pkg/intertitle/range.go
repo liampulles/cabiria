@@ -1,6 +1,8 @@
 package intertitle
 
 import (
+	"math"
+	"sort"
 	"time"
 
 	cabiriaTime "github.com/liampulles/cabiria/pkg/time"
@@ -66,6 +68,91 @@ func MapRanges(intertitles []bool, fps float64) []Range {
 	// Close off end, if applicable
 	transitions = appendIntertitle(transitions, start, len(intertitles)-1, fps)
 	return transitions
+}
+
+// JoinTouchingRanges will merge adjacent or overlapping ranges in the given set.
+func JoinTouchingRanges(many []Range) []Range {
+	if len(many) == 0 {
+		return []Range{}
+	}
+	sortRanges(many)
+	var result []Range
+	currentSet := []Range{many[0]}
+	for i := 1; i < len(many); i++ {
+		elem := many[i]
+		if touchingMany(elem, currentSet) {
+			currentSet = append(currentSet, elem)
+		} else {
+			result = append(result, mergeManyRanges(currentSet))
+			currentSet = []Range{elem}
+		}
+	}
+	result = append(result, mergeManyRanges(currentSet))
+	return result
+}
+
+func sortRanges(many []Range) {
+	sort.Slice(many, func(i, j int) bool {
+		if many[i].StartFrame == many[j].StartFrame {
+			return many[i].EndFrame < many[j].EndFrame
+		}
+		return many[i].StartFrame < many[j].StartFrame
+	})
+}
+
+func touchingMany(a Range, b []Range) bool {
+	bReduced := Range{
+		StartFrame: minStart(b),
+		EndFrame:   maxEnd(b),
+	}
+	return touching(a, bReduced)
+}
+
+func touching(a, b Range) bool {
+	// Touching, i.e. either overlapping or bounds touch
+	if !(b.EndFrame < a.StartFrame) && !(a.EndFrame < b.StartFrame) {
+		return true
+	}
+	// Otherwise, if one frame difference between bounds
+	return b.StartFrame-a.EndFrame == 1 || a.StartFrame-b.EndFrame == 1
+}
+
+func minStart(many []Range) int {
+	minStart := math.MaxInt32
+	for _, elem := range many {
+		if elem.StartFrame < minStart {
+			minStart = elem.StartFrame
+		}
+	}
+	return minStart
+}
+
+func maxEnd(many []Range) int {
+	maxEnd := -1
+	for _, elem := range many {
+		if elem.EndFrame > maxEnd {
+			maxEnd = elem.EndFrame
+		}
+	}
+	return maxEnd
+}
+
+func mergeManyRanges(many []Range) Range {
+	base := many[0]
+	for i := 1; i < len(many); i++ {
+		base = mergeRanges(base, many[i])
+	}
+	return base
+}
+
+func mergeRanges(a, b Range) Range {
+	start := minStart([]Range{a, b})
+	end := maxEnd([]Range{a, b})
+	return Range{
+		StartFrame: start,
+		EndFrame:   end,
+		FPS:        a.FPS,
+	}
 }
 
 func appendIntertitle(transitions []Range, start, end int, fps float64) []Range {

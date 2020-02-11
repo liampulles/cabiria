@@ -6,19 +6,19 @@ import (
 	"github.com/liampulles/cabiria/pkg/time/period"
 
 	"github.com/liampulles/cabiria/pkg/intertitle"
-
-	cabiriaTime "github.com/liampulles/cabiria/pkg/time"
 )
 
 // AlignSubtitles tries to align the given subtitles to the detected intertitles
 //  such that when the subtitles are played back, they align exactly with each
 //  intertitle segment in the film - barring some edge cases arising due to
 //  imperfect data.
-func AlignSubtitles(subs []Subtitle, interRanges []intertitle.Range) []Subtitle {
+func AlignSubtitles(subs []Subtitle, interRanges []intertitle.Range) ([]Subtitle, []intertitle.Range) {
 	// TODO: Regularize input here
-	joined := rangedSortedSet(subs, interRanges)
+	mergedInterRanges := intertitle.JoinTouchingRanges(interRanges)
+
+	joined := rangedSortedSet(subs, interRangesAsPeriods(mergedInterRanges))
 	overlaps := overlappingSets(joined)
-	return alignSubtitlesFromOverlappingSets(overlaps)
+	return alignSubtitlesFromOverlappingSets(overlaps), mergedInterRanges
 }
 
 func overlappingSets(sortedRanges []period.Period) [][]period.Period {
@@ -111,17 +111,11 @@ func alignSubtitlesFromOverlappingSet(set []period.Period) []Subtitle {
 	return periodsAsSubs(result)
 }
 
-func rangedSortedSet(subs []Subtitle, interRanges []intertitle.Range) []period.Period {
+func rangedSortedSet(subs []Subtitle, interRangePeriods []period.Period) []period.Period {
 	var rangedSet []period.Period
 
 	rangedSet = append(rangedSet, subsAsPeriods(subs)...)
-
-	mergedInterRanges := period.MergeTouching(interRangesAsPeriods(interRanges), func(a, b period.Period) period.Period {
-		newStart := cabiriaTime.Min(a.Start(), b.Start())
-		newEnd := cabiriaTime.Max(a.End(), b.End())
-		return a.TransformToNew(newStart, newEnd)
-	})
-	rangedSet = append(rangedSet, mergedInterRanges...)
+	rangedSet = append(rangedSet, interRangePeriods...)
 
 	period.Sort(rangedSet)
 	return rangedSet
@@ -147,6 +141,14 @@ func interRangesAsPeriods(interRanges []intertitle.Range) period.Periods {
 	var result []period.Period
 	for _, elem := range interRanges {
 		result = append(result, elem)
+	}
+	return result
+}
+
+func periodsAsInterRanges(periods []period.Period) []intertitle.Range {
+	var result []intertitle.Range
+	for _, elem := range periods {
+		result = append(result, elem.(intertitle.Range))
 	}
 	return result
 }

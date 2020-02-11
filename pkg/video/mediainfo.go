@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-const seperator = "-SEPERATOR-"
+const separator = "-SEPARATOR-"
 
 // QueryWithMediaInfo queries the desired aspects of a video using
 //  mediainfo. The corresponding results for each parameter are returned.
@@ -46,10 +46,10 @@ func outputArg(videoParameters []string) string {
 	for i, videoParameter := range videoParameters {
 		transformedParameters[i] = fmt.Sprintf(`%%%s%%`, videoParameter)
 	}
-	parameters := strings.Join(transformedParameters, seperator)
+	parameters := strings.Join(transformedParameters, separator)
 	return result + parameters
 }
 
 func mapOutput(output string) []string {
-	return strings.Split(strings.Split(output, "\n")[0], seperator)
+	return strings.Split(strings.Split(output, "\n")[0], separator)
 }
