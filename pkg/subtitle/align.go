@@ -1,6 +1,7 @@
 package subtitle
 
 import (
+	"image/color"
 	"time"
 
 	"github.com/liampulles/cabiria/pkg/time/period"
@@ -13,8 +14,6 @@ import (
 //  intertitle segment in the film - barring some edge cases arising due to
 //  imperfect data.
 func AlignSubtitles(subs []Subtitle, interRanges []intertitle.Range) []Subtitle {
-	// TODO: Copy over style from ranges to associated subs.
-	// TODO: Make sure subs get a style, even default if not overlapping.
 	joined := rangedSortedSet(subs, interRanges)
 	overlaps := overlappingSets(joined)
 	return alignSubtitlesFromOverlappingSets(overlaps)
@@ -65,8 +64,9 @@ func alignSubtitlesFromOverlappingSet(set []period.Period) []Subtitle {
 		}
 	}
 	// -> If no intertitles, or no subs -> Fix and return subs. //TODO: Maybe nil?
+	// TODO: Attach default style.
 	if len(interRangePeriods) == 0 || len(subtitlePeriods) == 0 {
-		return periodsAsSubs(period.FixOverlaps(subtitlePeriods))
+		return applyDefaultStyle(periodsAsSubs(period.FixOverlaps(subtitlePeriods)))
 	}
 
 	// Scale the subtitle set to match the intertitleRange set bounds
@@ -100,6 +100,7 @@ func alignSubtitlesFromOverlappingSet(set []period.Period) []Subtitle {
 		newEnd := interRangePeriods[i].End()
 		newSubs := period.Periods(bucket).TransformToNew(newStart, newEnd).(period.Periods)
 		newSubs = period.CoverGaps(newSubs)
+		newSubs = copyStyle(newSubs, interRangePeriods[i])
 		result = append(result, newSubs...)
 	}
 
@@ -108,6 +109,29 @@ func alignSubtitlesFromOverlappingSet(set []period.Period) []Subtitle {
 
 	// return final set
 	return periodsAsSubs(result)
+}
+
+func copyStyle(subs []period.Period, interRange period.Period) []period.Period {
+	style := interRange.(intertitle.Range).Style
+	result := make([]period.Period, len(subs))
+	for i, sub := range subs {
+		castSub := sub.(Subtitle)
+		castSub.Style = style
+		result[i] = castSub
+	}
+	return result
+}
+
+func applyDefaultStyle(subs []Subtitle) []Subtitle {
+	result := make([]Subtitle, len(subs))
+	for i, elem := range subs {
+		elem.Style = intertitle.Style{
+			ForegroundColor: color.White,
+			BackgroundColor: color.Black,
+		}
+		result[i] = elem
+	}
+	return result
 }
 
 func rangedSortedSet(subs []Subtitle, interRanges []intertitle.Range) []period.Period {

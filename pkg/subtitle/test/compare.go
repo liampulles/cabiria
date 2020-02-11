@@ -5,6 +5,8 @@ import (
 	"math"
 	"time"
 
+	"github.com/liampulles/cabiria/pkg/intertitle/test"
+
 	"github.com/liampulles/cabiria/pkg/subtitle"
 )
 
@@ -44,6 +46,10 @@ func CompareSubtitle(actual, expected subtitle.Subtitle) error {
 	}
 	if !veryClose(actual.EndTime, expected.EndTime) {
 		return fmt.Errorf("endTime differs: Actual: %s, Expected: %s", actual.EndTime, expected.EndTime)
+	}
+	// Style
+	if err := test.CompareStyle(actual.Style, expected.Style); err != nil {
+		return fmt.Errorf("Styles differ: %v", err)
 	}
 	return nil
 }

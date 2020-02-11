@@ -2,7 +2,9 @@ package subtitle_test
 
 import (
 	"fmt"
+	"image/color"
 	"testing"
+	"time"
 
 	"github.com/liampulles/cabiria/pkg/intertitle"
 	"github.com/liampulles/cabiria/pkg/subtitle"
@@ -277,6 +279,9 @@ func TestAlignSubtitles(t *testing.T) {
 			// Exercise SUT
 			actual := subtitle.AlignSubtitles(test.subs, test.interRanges)
 
+			// We don't want to test styles here, there is another test for that.
+			actual = eraseStyles(actual)
+
 			// Verify result
 			if err := subTest.CompareSubtitles(actual, test.expected); err != nil {
 				t.Errorf("Unexpected result: %v", err)
@@ -285,8 +290,45 @@ func TestAlignSubtitles(t *testing.T) {
 	}
 }
 
+func TestAlignSubtitles_ShouldCopyStyles(t *testing.T) {
+	// Setup fixture
+	inputSubs := subs(
+		sub(timestamp(0, 0, 1, 0), timestamp(0, 0, 6, 0), "text1"),
+		sub(timestamp(0, 0, 7, 0), timestamp(0, 0, 10, 0), "text2"),
+		sub(timestamp(0, 0, 11, 0), timestamp(0, 0, 14, 0), "text3"),
+	)
+	inputInterRanges := interRanges(
+		interRangeWithStyle(0, 3, 1.0, style(color.White, color.White)),
+		interRangeWithStyle(5, 15, 1.0, style(color.Black, color.Black)),
+	)
+
+	// Setup expectations
+	expectedSubs := subs(
+		subWithStyle(timestamp(0, 0, 0, 0), timestamp(0, 0, 3, 0), "text1", style(color.White, color.White)),
+		subWithStyle(timestamp(0, 0, 5, 0), timestamp(0, 0, 10, 0), "text2", style(color.Black, color.Black)),
+		subWithStyle(timestamp(0, 0, 10, 0), timestamp(0, 0, 15, 0), "text3", style(color.Black, color.Black)),
+	)
+
+	// Exercise SUT
+	actual := subtitle.AlignSubtitles(inputSubs, inputInterRanges)
+
+	// Verify result
+	if err := subTest.CompareSubtitles(actual, expectedSubs); err != nil {
+		t.Errorf("Unexpected result: %v", err)
+	}
+}
+
 func subs(subs ...subtitle.Subtitle) []subtitle.Subtitle {
 	return subs
+}
+
+func subWithStyle(start, end time.Time, text string, style intertitle.Style) subtitle.Subtitle {
+	return subtitle.Subtitle{
+		StartTime: start,
+		EndTime:   end,
+		Text:      text,
+		Style:     style,
+	}
 }
 
 func interRange(start, end int, fps float64) intertitle.Range {
@@ -297,7 +339,35 @@ func interRange(start, end int, fps float64) intertitle.Range {
 	}
 }
 
+func interRangeWithStyle(start, end int, fps float64, style intertitle.Style) intertitle.Range {
+	return intertitle.Range{
+		StartFrame: start,
+		EndFrame:   end,
+		FPS:        fps,
+		Style:      style,
+	}
+}
+
 func interRanges(irs ...intertitle.Range) []intertitle.Range {
 	result := make([]intertitle.Range, 0)
 	return append(result, irs...)
+}
+
+func style(foreground, background color.Color) intertitle.Style {
+	return intertitle.Style{
+		ForegroundColor: foreground,
+		BackgroundColor: background,
+	}
+}
+
+func eraseStyles(subs []subtitle.Subtitle) []subtitle.Subtitle {
+	if subs == nil {
+		return nil
+	}
+	result := make([]subtitle.Subtitle, len(subs))
+	for i, elem := range subs {
+		elem.Style = intertitle.Style{}
+		result[i] = elem
+	}
+	return result
 }

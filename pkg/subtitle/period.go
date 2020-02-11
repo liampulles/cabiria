@@ -28,5 +28,6 @@ func (s Subtitle) TransformToNew(start, end time.Time) period.Period {
 		StartTime: start,
 		EndTime:   end,
 		Text:      s.Text,
+		Style:     s.Style,
 	}
 }

@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/liampulles/cabiria/pkg/intertitle"
 	"github.com/liampulles/cabiria/pkg/subtitle/style"
 
 	"github.com/liampulles/cabiria/pkg/file"
@@ -83,6 +84,7 @@ func closeAndAddCurrent(start, end time.Time, lines []string, subs []subtitle.Su
 		StartTime: start,
 		EndTime:   end,
 		Text:      joined,
+		Style:     intertitle.Style{},
 	}
 
 	subs = append(subs, new)
