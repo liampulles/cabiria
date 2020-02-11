@@ -12,13 +12,15 @@ import (
 //  such that when the subtitles are played back, they align exactly with each
 //  intertitle segment in the film - barring some edge cases arising due to
 //  imperfect data.
-func AlignSubtitles(subs []Subtitle, interRanges []intertitle.Range) ([]Subtitle, []intertitle.Range) {
-	// TODO: Regularize input here
-	mergedInterRanges := intertitle.JoinTouchingRanges(interRanges)
-
-	joined := rangedSortedSet(subs, interRangesAsPeriods(mergedInterRanges))
+func AlignSubtitles(subs []Subtitle, interRanges []intertitle.Range) []Subtitle {
+	// TODO: Remove merging
+	// TODO: Only return subs
+	// TODO: Get styles in interranges before, maybe even in mapRanges
+	// TODO: Copy over style from ranges to associated subs.
+	// TODO: Make sure subs get a style, even default if not overlapping.
+	joined := rangedSortedSet(subs, interRanges)
 	overlaps := overlappingSets(joined)
-	return alignSubtitlesFromOverlappingSets(overlaps), mergedInterRanges
+	return alignSubtitlesFromOverlappingSets(overlaps)
 }
 
 func overlappingSets(sortedRanges []period.Period) [][]period.Period {
@@ -111,11 +113,11 @@ func alignSubtitlesFromOverlappingSet(set []period.Period) []Subtitle {
 	return periodsAsSubs(result)
 }
 
-func rangedSortedSet(subs []Subtitle, interRangePeriods []period.Period) []period.Period {
+func rangedSortedSet(subs []Subtitle, interRanges []intertitle.Range) []period.Period {
 	var rangedSet []period.Period
 
 	rangedSet = append(rangedSet, subsAsPeriods(subs)...)
-	rangedSet = append(rangedSet, interRangePeriods...)
+	rangedSet = append(rangedSet, interRangesAsPeriods(interRanges)...)
 
 	period.Sort(rangedSet)
 	return rangedSet

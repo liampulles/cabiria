@@ -14,11 +14,11 @@ func main() {
 	failIf(err)
 	videoInfo, err := core.ExtractVideoInformation(&config)
 	failIf(err)
-	subsInfo, err := core.ExtractSubtitlesInformation(config)
+	subsInfo, err := core.ExtractSubtitlesInformation(&config)
 	failIf(err)
-	prettyIntertitles, err := core.GeneratePrettyIntertitles(videoInfo, subsInfo, config)
+	prettyIntertitles, err := core.GeneratePrettyIntertitles(videoInfo, subsInfo, &config)
 	failIf(err)
-	err = core.SaveASS(prettyIntertitles, config)
+	err = core.SaveASS(prettyIntertitles, &config)
 	failIf(err)
 }
 

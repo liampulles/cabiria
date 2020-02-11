@@ -45,6 +45,11 @@ func (gc *GenerateConfiguration) VideoPath() string {
 	return gc.videoPath
 }
 
+// SRTPath is the path of the input subtitle
+func (gc *GenerateConfiguration) SRTPath() string {
+	return gc.srtPath
+}
+
 // FrameOutputDirectory is the temporary directory where frames will be extracted to.
 func (gc *GenerateConfiguration) FrameOutputDirectory() string {
 	//TODO: Check this folder gets deleted

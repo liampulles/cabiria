@@ -1,8 +1,6 @@
 package core
 
 import (
-	"os"
-
 	"github.com/liampulles/cabiria/pkg/array"
 	"github.com/liampulles/cabiria/pkg/image"
 	"github.com/liampulles/cabiria/pkg/intertitle"
@@ -20,7 +18,12 @@ type ExtractVideoConfiguration interface {
 
 // VideoInformation provides relevant information about the video (including
 //  the intertitles)
-type VideoInformation struct{}
+type VideoInformation struct {
+	VideoFPS         float64
+	VideoWidth       int
+	VideoHeight      int
+	IntertitleRanges []intertitle.Range
+}
 
 // ExtractVideoInformation reads relevant information from the input video
 func ExtractVideoInformation(config ExtractVideoConfiguration) (VideoInformation, error) {
@@ -36,12 +39,6 @@ func ExtractVideoInformation(config ExtractVideoConfiguration) (VideoInformation
 		return VideoInformation{}, err
 	}
 
-	// Delete extracted frames
-	err = os.RemoveAll(config.FrameOutputDirectory())
-	if err != nil {
-		return VideoInformation{}, err
-	}
-
 	// Smooth intertitle frames
 	smoothIntertitles(predictions, config.SmoothingClosingThreshold(), config.SmoothingOpeningThreshold())
 
@@ -51,11 +48,15 @@ func ExtractVideoInformation(config ExtractVideoConfiguration) (VideoInformation
 		return VideoInformation{}, err
 	}
 
-	// TODO:  Extract intertitle timings
-	intertitle.MapRanges(predictions, basicInfo.FPS)
+	// Extract intertitle timings
+	interRanges := intertitle.MapRanges(predictions, basicInfo.FPS)
 
-	// TODO: Extract intertitle color info(s)
-	return VideoInformation{}, nil
+	return VideoInformation{
+		VideoFPS:         basicInfo.FPS,
+		VideoHeight:      basicInfo.Height,
+		VideoWidth:       basicInfo.Width,
+		IntertitleRanges: interRanges,
+	}, nil
 }
 
 func predictIntertitles(framePaths []string, predictorPath string) ([]bool, error) {
