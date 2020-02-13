@@ -24,6 +24,7 @@ release: pre-commit
 	git commit -m "Release $(VERSION)"
 	git tag -a $(VERSION) -m "Tagging for release of $(VERSION)"
 	git push
+	git push origin --tags
 	go list -m
 clean:
 	rm -f coverage.txt

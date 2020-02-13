@@ -8,7 +8,7 @@ const (
 	// ProgramName is the name of this program.
 	ProgramName = "Cabiria"
 	// ProgramVersion is the version of this module
-	ProgramVersion = "v0.0.1"
+	ProgramVersion = "v0.0.2"
 	// ProgramURL is the homepage for this program
 	ProgramURL = "https://github.com/liampulles/cabiria"
 )
