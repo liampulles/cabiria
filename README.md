@@ -79,7 +79,12 @@ If you find that the application isn't generating accurate intertitles, then con
 
   1. Fork the master branch of this repository.
   1. Run `make install`
-  1. Add some training frames to `data/intertitle/frames`... importantly, if it is an intertitle frame, make sure that the name ends with `intertitle.png` (and not if not). The images should be in PNG format. Try to select a variety of images, and balance the number evenly between intertitle images and non-intertitle images. Please try not to submit more than ~60 images for a given film.
+  1. Add some training frames to `data/intertitle/frames`... importantly, if it is an intertitle frame, make sure that the name ends with `intertitle.png` (and not if not). Some suggestions / requirements:
+     * The images should be in PNG format.
+     * Try to select a variety of images, and balance the number evenly between intertitle images and non-intertitle images.
+     * Use `ffmpeg -i <videoPath> -r 1 -vf scale=64:48 <outputPath>/<filmName>%06d.png` to extract frames from a video for inclusion, as this is (roughly) what cabiria will use when running the generation process.
+     * This will bulk rename all files in the current directory to have suffix intertitle.png: `ls | xargs -I fileName mv fileName fileName.intertitle.png`.
+     * Please try not to submit more than ~60 images for a given film.
   1. Run `cabiria-processdata`. This will generate `data/intertitle/data.csv`, which holds the training data.
   1. Run `cabiria-trainer`. This will generate `data/intertitle/intertitlePredictor.model`, which is the saved predictor.
   1. Run `make install`, which will install the new predictor on your machine.

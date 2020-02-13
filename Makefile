@@ -19,6 +19,8 @@ install: build
 	go install ./...
 	sudo mkdir -p $(PREDICTOR_PATH)
 	sudo cp ./data/intertitle/$(PREDICTOR_FILENAME) $(PREDICTOR_PATH)/$(PREDICTOR_FILENAME)
+	sudo cp -r ./data/fonts/* /usr/share/fonts/opentype/
+	sudo fc-cache -f -v
 inspect: build
 	golint ./...
 pre-commit: clean coverage.txt inspect
@@ -26,7 +28,7 @@ pre-commit: clean coverage.txt inspect
 release: pre-commit
 	@echo -n "Going to release $(VERSION) (current version is $(CURRENT_VERSION)). Proceed? [y/N] " && read ans && [ $${ans:-N} = y ]
 	git add -A
-	git commit -m "Release $(VERSION)"
+	git commit
 	git tag $(VERSION)
 	git push origin --tags
 	git push

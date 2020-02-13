@@ -24,7 +24,7 @@ func Train(csvPath string, modelPath string) error {
 	cls := ml.NewKNNClassifier(1)
 
 	//Do a training-test split
-	trainData, testData := ml.Split(rawData, 0.5)
+	trainData, testData := ml.Split(rawData, 0.66)
 	err = cls.Fit(trainData)
 	if err != nil {
 		return err

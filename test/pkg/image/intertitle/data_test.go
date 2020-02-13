@@ -47,13 +47,13 @@ func TestGetIntensityStats(t *testing.T) {
 		expected intertitle.IntensityStats
 	}{
 		{"frame000003.png", intertitle.IntensityStats{
-			AvgIntensity:       0.109066,
-			LowerAvgIntensity:  0.001877,
-			MiddleAvgIntensity: 0.563076,
-			UpperAvgIntensity:  0.827755,
-			ProportionLower:    0.857025,
-			ProportionMiddle:   0.041146,
-			ProportionUpper:    0.101829,
+			AvgIntensity:       0.125683,
+			LowerAvgIntensity:  0.004510,
+			MiddleAvgIntensity: 0.555446,
+			UpperAvgIntensity:  0.825777,
+			ProportionLower:    0.817975,
+			ProportionMiddle:   0.104757,
+			ProportionUpper:    0.077269,
 		}},
 	}
 

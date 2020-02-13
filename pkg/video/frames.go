@@ -24,7 +24,7 @@ func ExtractFrames(videoPath string, outputDirectory string) ([]string, error) {
 	}
 
 	// Extract the frames
-	cmd := exec.Command("ffmpeg", "-i", videoPath, "-vf", "eq=contrast=1.5:brightness=-0.05,scale=64:48", path.Join(outputDirectory, extractedFramePrefix+"%06d.png"))
+	cmd := exec.Command("ffmpeg", "-i", videoPath, "-vf", "scale=64:48", path.Join(outputDirectory, extractedFramePrefix+"%06d.png"))
 	err = cmd.Start()
 	if err != nil {
 		return nil, fmt.Errorf("failed to start ffmpeg: %v", err)

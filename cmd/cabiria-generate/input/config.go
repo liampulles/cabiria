@@ -90,7 +90,7 @@ func (gc *GenerateConfiguration) SmoothingOpeningThreshold() uint {
 
 // FontName is the name of the font to use in the generated ASS
 func (gc *GenerateConfiguration) FontName() string {
-	return "Arial"
+	return "Tryst"
 }
 
 // FontSize is the size of the font to use in the generated ASS

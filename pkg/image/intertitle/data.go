@@ -38,7 +38,7 @@ func (is IntensityStats) AsInput() ml.Datum {
 
 // GetIntensityStats extracts intensity statistics from an image.
 func GetIntensityStats(img image.Image) IntensityStats {
-	levelled := cabiriaImage.LevelImage(img, 0.1, 0.9)
+	//levelled := cabiriaImage.LevelImage(img, 0.1, 0.9)
 	sum := float64(0)
 	lowerSum := float64(0)
 	middleSum := float64(0)
@@ -46,7 +46,7 @@ func GetIntensityStats(img image.Image) IntensityStats {
 	lowerCount := float64(0.0001) // Avoid divide by zero issues
 	middleCount := float64(0.0001)
 	upperCount := float64(0.0001)
-	cabiriaImage.ForEachPixel(levelled, func(x int, y int, col color.Color) {
+	cabiriaImage.ForEachPixel(img, func(x int, y int, col color.Color) {
 		intensity := Intensity(col)
 		sum += intensity
 		if intensity < 0.25 {
