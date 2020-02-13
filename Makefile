@@ -22,7 +22,8 @@ release: pre-commit
 	@echo -n "Going to tag this branch as $(VERSION). Proceed? [y/N] " && read ans && [ $${ans:-N} = y ]
 	git add -A
 	git commit -m "Release $(VERSION)"
-	git tag $(VERSION)
+	git git tag -a $(VERSION)-m "Tagging for release of $(VERSION)"
 	git push
+	go list -m
 clean:
 	rm -f coverage.txt
