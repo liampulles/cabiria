@@ -31,6 +31,7 @@ func ExtractSubtitlesInformation(config SubtitlesConfiguration) (SubtitlesInform
 		return SubtitlesInformation{}, err
 	}
 	printProgressDot()
+	printProgressDot()
 	printDone()
 
 	return SubtitlesInformation{

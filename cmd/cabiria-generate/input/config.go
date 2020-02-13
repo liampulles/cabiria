@@ -3,7 +3,12 @@ package input
 import (
 	"flag"
 	"fmt"
+	"os"
 	"path"
+
+	"github.com/liampulles/cabiria/pkg/meta"
+
+	"github.com/liampulles/cabiria/pkg/intertitle"
 )
 
 // GenerateConfiguration provides configuration options necessary
@@ -17,9 +22,15 @@ type GenerateConfiguration struct {
 // GetGenerateConfiguration parses the command line to provide config
 //  for the core application
 func GetGenerateConfiguration(args []string) (GenerateConfiguration, error) {
-	video := flag.String("video", "", "Silent film to analyze for intertitles")
-	srt := flag.String("srt", "", "SRT subtitles to source for text")
-	ass := flag.String("ass", "", "(Optional) ASS file to save to. Default is the SRT path with ASS extension")
+	video := flag.String("video", "", "Silent film to analyze for intertitles.")
+	srt := flag.String("srt", "", "SRT subtitles to source for text.")
+	ass := flag.String("ass", "", "(Optional) ASS file to save to. Default is the SRT path with ASS extension.")
+
+	// Custom usage message
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "%s %s (%s)\n\nUsage:\n", meta.ProgramName, meta.ProgramVersion, meta.ProgramURL)
+		flag.PrintDefaults()
+	}
 
 	flag.CommandLine.Parse(args[1:])
 
@@ -62,7 +73,7 @@ func (gc *GenerateConfiguration) FrameOutputDirectory() string {
 
 // PredictorPath points to the ml.Predictor model used to predict intertitles
 func (gc *GenerateConfiguration) PredictorPath() string {
-	return "/etc/cabiria/intertitlePredictor.model"
+	return path.Join(intertitle.PredictorPath, intertitle.PredictorFilename)
 }
 
 // SmoothingClosingThreshold defines the upper bound for a gap in intertitles

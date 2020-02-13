@@ -2,8 +2,11 @@ package main
 
 import (
 	"os"
+	"path"
 
-	"github.com/liampulles/cabiria/pkg/ml/train/intertitle"
+	"github.com/liampulles/cabiria/pkg/intertitle"
+
+	mlIntertitle "github.com/liampulles/cabiria/pkg/ml/train/intertitle"
 )
 
 func main() {
@@ -12,12 +15,12 @@ func main() {
 		csvPath = os.Args[1]
 	}
 
-	modelPath := "data/intertitle/knn.model"
+	modelPath := path.Join("data/intertitle", intertitle.PredictorFilename)
 	if len(os.Args) >= 3 {
 		modelPath = os.Args[2]
 	}
 
-	err := intertitle.Train(csvPath, modelPath)
+	err := mlIntertitle.Train(csvPath, modelPath)
 	if err != nil {
 		panic(err)
 	}

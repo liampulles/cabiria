@@ -9,7 +9,7 @@ import (
 func TestTrain(t *testing.T) {
 	// Setup fixture
 	csvPath := "testdata/data.csv"
-	modelPath := "testdata/knn.model"
+	modelPath := "testdata/intertitlePredictor.model"
 
 	// Exercise SUT
 	err := intertitle.Train(csvPath, modelPath)

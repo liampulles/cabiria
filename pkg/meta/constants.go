@@ -5,10 +5,10 @@ package meta
 //  version below.
 
 const (
-	// ProgramName is the name of this program.
+	// ProgramName is the name of this program
 	ProgramName = "Cabiria"
 	// ProgramVersion is the version of this module
-	ProgramVersion = "v0.0.3"
+	ProgramVersion = "v0.1.0"
 	// ProgramURL is the homepage for this program
 	ProgramURL = "https://github.com/liampulles/cabiria"
 )
