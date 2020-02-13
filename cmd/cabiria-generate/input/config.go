@@ -16,12 +16,12 @@ type GenerateConfiguration struct {
 
 // GetGenerateConfiguration parses the command line to provide config
 //  for the core application
-func GetGenerateConfiguration() (GenerateConfiguration, error) {
+func GetGenerateConfiguration(args []string) (GenerateConfiguration, error) {
 	video := flag.String("video", "", "Silent film to analyze for intertitles")
 	srt := flag.String("srt", "", "SRT subtitles to source for text")
 	ass := flag.String("ass", "", "(Optional) ASS file to save to. Default is the SRT path with ASS extension")
 
-	flag.Parse()
+	flag.CommandLine.Parse(args[1:])
 
 	if *video == "" {
 		return GenerateConfiguration{}, fmt.Errorf("you must provide a -video parameter")
@@ -50,9 +50,13 @@ func (gc *GenerateConfiguration) SRTPath() string {
 	return gc.srtPath
 }
 
+// ASSPath is the path of the output subtitle
+func (gc *GenerateConfiguration) ASSPath() string {
+	return gc.assPath
+}
+
 // FrameOutputDirectory is the temporary directory where frames will be extracted to.
 func (gc *GenerateConfiguration) FrameOutputDirectory() string {
-	//TODO: Check this folder gets deleted
 	return "/tmp/cabiria/extractedFrames"
 }
 
@@ -71,6 +75,16 @@ func (gc *GenerateConfiguration) SmoothingClosingThreshold() uint {
 //  kept
 func (gc *GenerateConfiguration) SmoothingOpeningThreshold() uint {
 	return 15
+}
+
+// FontName is the name of the font to use in the generated ASS
+func (gc *GenerateConfiguration) FontName() string {
+	return "Arial"
+}
+
+// FontSize is the size of the font to use in the generated ASS
+func (gc *GenerateConfiguration) FontSize() uint {
+	return 48
 }
 
 func defaultASS(srt *string) *string {

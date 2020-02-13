@@ -1,15 +1,13 @@
 package style
 
 import (
-	"image/color"
 	"strings"
 )
 
 // Style defines the aesthetic aspects of a piece of text when rendered
 type Style struct {
-	FontName  string
-	FontSize  uint
-	FontColor color.Color
+	FontName string
+	FontSize uint
 }
 
 type styleTagPos struct {

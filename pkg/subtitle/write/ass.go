@@ -18,7 +18,7 @@ import (
 // VideoInformation provides necessary info about the video for generating an
 //  ASS file.
 type VideoInformation interface {
-	VideoName() string
+	VideoPath() string
 	VideoWidth() int
 	VideoHeight() int
 }
@@ -26,7 +26,7 @@ type VideoInformation interface {
 // ASS saves subtitles with a given style to ASS format at path
 func ASS(subs []subtitle.Subtitle, sty style.Style, vidInfo VideoInformation, path string) error {
 	text := ""
-	text += assHeader(vidInfo.VideoName(), vidInfo.VideoWidth(), vidInfo.VideoHeight())
+	text += assHeader(vidInfo.VideoPath(), vidInfo.VideoWidth(), vidInfo.VideoHeight())
 	text += assStyles(sty)
 	text += assEvents(subs)
 
@@ -65,16 +65,22 @@ Style: cabiria,%s,%d,%s,%s,%s,%s,0,0,0,0,100,100,0,0,3,1000,0,5,10,10,10,1
 `,
 		sty.FontName,
 		sty.FontSize,
-		assColor(sty.FontColor),
-		assColor(color.Transparent),
-		assColor(color.Transparent),
-		assColor(color.Black))
+		assColor(color.White, false),
+		assColor(color.Transparent, true),
+		assColor(color.Black, true),
+		assColor(color.Transparent, false))
 }
 
-func assColor(col color.Color) string {
+func assColor(col color.Color, withAlpha bool) string {
 	r, g, b, a := col.RGBA()
-	return fmt.Sprintf("&H%02X%02X%02X%02X",
-		int(a/257),
+	if withAlpha {
+		return fmt.Sprintf("&H%02X%02X%02X%02X",
+			255-int(a/257),
+			int(b/257),
+			int(g/257),
+			int(r/257))
+	}
+	return fmt.Sprintf("&H%02X%02X%02X",
 		int(b/257),
 		int(g/257),
 		int(r/257))
@@ -92,9 +98,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 }
 
 func assDialogueLine(sub subtitle.Subtitle) string {
-	return fmt.Sprintf("Dialogue: 0,%s,%s,cabiria,,0000,0000,0000,,%s\n",
+	return fmt.Sprintf("Dialogue: 0,%s,%s,cabiria,,0000,0000,0000,,{\\c%s&\\3c%s&}%s\n",
 		cabiriaTime.ToASSTimecode(sub.StartTime),
 		cabiriaTime.ToASSTimecode(sub.EndTime),
+		assColor(sub.Style.ForegroundColor, false),
+		assColor(sub.Style.BackgroundColor, false),
 		replaceNewlineWithSlashN(sub.Text))
 }
 

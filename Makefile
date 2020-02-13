@@ -17,4 +17,4 @@ inspect: build
 pre-commit: clean coverage.txt inspect
 	go mod tidy
 clean:
-	rm coverage.txt
+	rm -f coverage.txt

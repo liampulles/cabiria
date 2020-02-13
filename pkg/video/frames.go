@@ -1,7 +1,9 @@
 package video
 
 import (
+	"fmt"
 	"io/ioutil"
+	"os"
 	"os/exec"
 	"path"
 	"strings"
@@ -12,15 +14,24 @@ const extractedFramePrefix = "extracted_frame"
 // ExtractFrames uses FFmpeg to extract a video into frames, and returns
 // An array of ordered filepaths to the resulting PNG files.
 func ExtractFrames(videoPath string, outputDirectory string) ([]string, error) {
-	// Extract the frames
-	cmd := exec.Command("ffmpeg", "-i", videoPath, "-r", "1", path.Join(outputDirectory, extractedFramePrefix+"%06d.png"))
-	err := cmd.Start()
+	// Delete direcory, if it exists
+	os.RemoveAll(outputDirectory)
+
+	// Create directory path
+	err := os.MkdirAll(outputDirectory, 0700)
 	if err != nil {
 		return nil, err
 	}
+
+	// Extract the frames
+	cmd := exec.Command("ffmpeg", "-i", videoPath, "-vf", "eq=contrast=1.5:brightness=-0.05,scale=64:48", path.Join(outputDirectory, extractedFramePrefix+"%06d.png"))
+	err = cmd.Start()
+	if err != nil {
+		return nil, fmt.Errorf("failed to start ffmpeg: %v", err)
+	}
 	err = cmd.Wait()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to wait on ffmpeg: %v", err)
 	}
 
 	// Discover files

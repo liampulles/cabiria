@@ -1,6 +1,7 @@
 package video_test
 
 import (
+	"fmt"
 	"os"
 	"reflect"
 	"testing"
@@ -8,27 +9,9 @@ import (
 	"github.com/liampulles/cabiria/pkg/video"
 )
 
-// TODO: Travis cannot run this test, maybe check if ffmpeg available, or put
-//  into separate test package?
 func TestExtractFrames_ForExistingVideo(t *testing.T) {
 	// Setup fixture
-	expected := []string{
-		"testFrames/extracted_frame000001.png",
-		"testFrames/extracted_frame000002.png",
-		"testFrames/extracted_frame000003.png",
-		"testFrames/extracted_frame000004.png",
-		"testFrames/extracted_frame000005.png",
-		"testFrames/extracted_frame000006.png",
-		"testFrames/extracted_frame000007.png",
-		"testFrames/extracted_frame000008.png",
-		"testFrames/extracted_frame000009.png",
-		"testFrames/extracted_frame000010.png",
-		"testFrames/extracted_frame000011.png",
-		"testFrames/extracted_frame000012.png",
-		"testFrames/extracted_frame000013.png",
-		"testFrames/extracted_frame000014.png",
-		"testFrames/extracted_frame000015.png",
-	}
+	expected := expectedFrames()
 
 	err := os.Mkdir("testFrames", os.ModePerm)
 	if err != nil {
@@ -61,4 +44,12 @@ func TestExtractFrames_ForNonExistingVideo(t *testing.T) {
 	if err == nil {
 		t.Errorf("Expected SUT to return an error")
 	}
+}
+
+func expectedFrames() []string {
+	result := make([]string, 330)
+	for i := 0; i < 330; i++ {
+		result[i] = fmt.Sprintf("testFrames/extracted_frame%06d.png", i+1)
+	}
+	return result
 }
