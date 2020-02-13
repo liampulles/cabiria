@@ -22,7 +22,7 @@ release: pre-commit
 	@echo -n "Going to tag this branch as $(VERSION). Proceed? [y/N] " && read ans && [ $${ans:-N} = y ]
 	git add -A
 	git commit -m "Release $(VERSION)"
-	git tag -a $(VERSION) -m "Tagging for release of $(VERSION)"
+	git tag $(VERSION)
 	git push
 	git push origin --tags
 	go list -m
