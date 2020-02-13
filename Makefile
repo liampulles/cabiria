@@ -15,11 +15,10 @@ test: build
 	go test ./test/...
 build:
 	go build ./...
-	go install ./...
 install: build
-	cp ${GOBIN}/cabiria* /usr/bin/
-	mkdir -p $(PREDICTOR_PATH)
-	cp ./data/intertitle/$(PREDICTOR_FILENAME) $(PREDICTOR_PATH)/$(PREDICTOR_FILENAME)
+	go install ./...
+	sudo mkdir -p $(PREDICTOR_PATH)
+	sudo cp ./data/intertitle/$(PREDICTOR_FILENAME) $(PREDICTOR_PATH)/$(PREDICTOR_FILENAME)
 inspect: build
 	golint ./...
 pre-commit: clean coverage.txt inspect
@@ -30,6 +29,7 @@ release: pre-commit
 	git commit -m "Release $(VERSION)"
 	git tag $(VERSION)
 	git push origin --tags
+	git push
 	go list -m github.com/liampulles/cabiria@$(VERSION)
 clean:
 	rm -f ${GOPATH}/bin/cabiria*

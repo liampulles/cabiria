@@ -52,7 +52,7 @@ Cabiria is available for general usage!
   2. Run:
 
   ```bash
-  sudo make install
+  make install
   ```
 
   3. Start generating!
@@ -69,7 +69,7 @@ To generate appropriate styled intertitles for existing (e.g. `LesVampires1915.s
 
 ## 🎭 Planned Usage
 
-* `cabiria resync`: Sync external subtitles to detected intertitles in a video.
+* `cabiria-resync`: Sync external subtitles to detected intertitles in a video.
 
 ## 🐉 Contributing
 
@@ -78,15 +78,15 @@ To generate appropriate styled intertitles for existing (e.g. `LesVampires1915.s
 If you find that the application isn't generating accurate intertitles, then consider submitting some training data for the predictor model. To do so:
 
   1. Fork the master branch of this repository.
-  1. Run `sudo make install`
+  1. Run `make install`
   1. Add some training frames to `data/intertitle/frames`... importantly, if it is an intertitle frame, make sure that the name ends with `intertitle.png` (and not if not). The images should be in PNG format. Try to select a variety of images, and balance the number evenly between intertitle images and non-intertitle images. Please try not to submit more than ~60 images for a given film.
   1. Run `cabiria-processdata`. This will generate `data/intertitle/data.csv`, which holds the training data.
   1. Run `cabiria-trainer`. This will generate `data/intertitle/intertitlePredictor.model`, which is the saved predictor.
-  1. Run `sudo make install`, which will install the new predictor on your machine.
+  1. Run `make install`, which will install the new predictor on your machine.
   1. Try and generate intertitles for your film again, and see if there is an improvement.
   1. Make a Pull Request into master, so that we may all benefit from your addition. :)
 
-### Code changes
+### • Code changes
 
 If you wish to make a code change, then I suggest making an issue for your proposal.
 
