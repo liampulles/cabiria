@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"image"
 	"image/color"
-	"math"
 	"testing"
+
+	"github.com/lucasb-eyer/go-colorful"
 
 	cabiriaImage "github.com/liampulles/cabiria/pkg/image"
 	cabiriaImageTest "github.com/liampulles/cabiria/pkg/image/test"
@@ -21,30 +22,50 @@ func TestGetForegroundAndBackground(t *testing.T) {
 		// Single case
 		{
 			singleColorImage(color.Black),
-			color.Black,
-			color.Black,
+			color.White,
+			colorFromHSV(0.0, 0.0, 0.1),
 		},
 		{
 			singleColorImage(color.White),
 			color.White,
-			color.White,
+			colorFromHSV(0.0, 0.0, 0.1),
 		},
 		{
-			singleColorImage(darkPink()),
-			darkPink(),
-			darkPink(),
+			singleColorImage(colorFromHSV(60.0, 1.0, 0.5)),
+			colorFromHSV(60.0, 1.0, 1.0),
+			colorFromHSV(60.0, 1.0, 0.1),
 		},
 		// Non-tinted image
 		{
 			loadImage("testdata/viking.png"),
-			colorFromRGB(177, 174, 172),
-			colorFromRGB(1, 1, 1),
+			color.RGBA64{
+				R: 65535,
+				G: 64424,
+				B: 63684,
+				A: 65535,
+			},
+			color.RGBA64{
+				R: 6554,
+				G: 6554,
+				B: 6554,
+				A: 65535,
+			},
 		},
 		// Tinted image
 		{
 			loadImage("testdata/godard.png"),
-			colorFromRGB(146, 3, 2),
-			colorFromRGB(2, 0, 0),
+			color.RGBA64{
+				R: 65535,
+				G: 1347,
+				B: 898,
+				A: 65535,
+			},
+			color.RGBA64{
+				R: 6554,
+				G: 0,
+				B: 0,
+				A: 65535,
+			},
 		},
 	}
 
@@ -62,6 +83,108 @@ func TestGetForegroundAndBackground(t *testing.T) {
 			}
 			if err := cabiriaImageTest.CompareColor(actualBackground, test.expectedBackground); err != nil {
 				t.Errorf("Unexpected result for background: %v", err)
+			}
+		})
+	}
+}
+
+func TestChangeValue(t *testing.T) {
+	// Setup fixture
+	var tests = []struct {
+		col      color.Color
+		value    float64
+		expected color.Color
+	}{
+		// Min value
+		{
+			colorFromHSV(0.0, 0.0, 0.0),
+			0.0,
+			colorFromHSV(0.0, 0.0, 0.0),
+		},
+		{
+			colorFromHSV(0.0, 0.0, 1.0),
+			0.0,
+			colorFromHSV(0.0, 0.0, 0.0),
+		},
+		{
+			colorFromHSV(120.0, 0.5, 0.6),
+			0.0,
+			colorFromHSV(120.0, 0.5, 0.0),
+		},
+		// Min value clamped
+		{
+			colorFromHSV(0.0, 0.0, 0.0),
+			-1.0,
+			colorFromHSV(0.0, 0.0, 0.0),
+		},
+		{
+			colorFromHSV(0.0, 0.0, 1.0),
+			-1.0,
+			colorFromHSV(0.0, 0.0, 0.0),
+		},
+		{
+			colorFromHSV(120.0, 0.5, 0.6),
+			-1.0,
+			colorFromHSV(120.0, 0.5, 0.0),
+		},
+		// Max value
+		{
+			colorFromHSV(0.0, 0.0, 0.0),
+			1.0,
+			colorFromHSV(0.0, 0.0, 1.0),
+		},
+		{
+			colorFromHSV(0.0, 0.0, 1.0),
+			1.0,
+			colorFromHSV(0.0, 0.0, 1.0),
+		},
+		{
+			colorFromHSV(120.0, 0.5, 0.6),
+			1.0,
+			colorFromHSV(120.0, 0.5, 1.0),
+		},
+		// Max value clamped
+		{
+			colorFromHSV(0.0, 0.0, 0.0),
+			2.0,
+			colorFromHSV(0.0, 0.0, 1.0),
+		},
+		{
+			colorFromHSV(0.0, 0.0, 1.0),
+			2.0,
+			colorFromHSV(0.0, 0.0, 1.0),
+		},
+		{
+			colorFromHSV(120.0, 0.5, 0.6),
+			2.0,
+			colorFromHSV(120.0, 0.5, 1.0),
+		},
+		// Midrange value
+		{
+			colorFromHSV(0.0, 0.0, 0.0),
+			0.3,
+			colorFromHSV(0.0, 0.0, 0.3),
+		},
+		{
+			colorFromHSV(0.0, 0.0, 1.0),
+			0.3,
+			colorFromHSV(0.0, 0.0, 0.3),
+		},
+		{
+			colorFromHSV(120.0, 0.5, 0.6),
+			0.4,
+			colorFromHSV(120.0, 0.5, 0.4),
+		},
+	}
+
+	for i, test := range tests {
+		t.Run(fmt.Sprintf("[%d]", i), func(t *testing.T) {
+			// Exercise SUT
+			actual := cabiriaImage.ChangeValue(test.col, test.value)
+
+			// Verify result
+			if err := cabiriaImageTest.CompareColor(actual, test.expected); err != nil {
+				t.Errorf("Unexpected result: %v", err)
 			}
 		})
 	}
@@ -92,14 +215,6 @@ func singleColorImage(col color.Color) image.Image {
 	return img
 }
 
-func darkPink() color.Color {
-	return color.RGBA{
-		R: uint8(50),
-		G: uint8(10),
-		B: uint8(10),
-		A: math.MaxUint8,
-	}
-}
 func colorFromRGB(r, g, b uint8) color.Color {
 	return color.RGBA{
 		R: r,
@@ -107,4 +222,8 @@ func colorFromRGB(r, g, b uint8) color.Color {
 		B: b,
 		A: 255,
 	}
+}
+
+func colorFromHSV(h, s, v float64) color.Color {
+	return colorful.Hsv(h, s, v)
 }

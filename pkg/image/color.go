@@ -4,6 +4,9 @@ import (
 	"image"
 	"image/color"
 
+	"github.com/lucasb-eyer/go-colorful"
+
+	cabiriaMath "github.com/liampulles/cabiria/pkg/math"
 	"github.com/liampulles/cabiria/pkg/ml"
 	"github.com/liampulles/cabiria/pkg/ml/cluster"
 )
@@ -12,7 +15,16 @@ const (
 	minLightness = 0.3
 )
 
-// GetForegroundAndBackground guesses the background and foreground color.
+// ChangeValue will convert the color to HSV() space, and return a color
+// with V set to value
+func ChangeValue(col color.Color, value float64) color.Color {
+	clamped := cabiriaMath.ClampFloat64(value, 0.0, 1.0)
+	newCol, _ := colorful.MakeColor(col)
+	h, s, _ := newCol.Hsv()
+	return colorful.Hsv(h, s, clamped)
+}
+
+// GetForegroundAndBackground guesses the foreground and background color.
 func GetForegroundAndBackground(img image.Image) (color.Color, color.Color, error) {
 	// Use KMeans to quantize image into two centroids.
 	kMeans := cluster.NewKMeansClassifier(2, 5000)
@@ -26,9 +38,9 @@ func GetForegroundAndBackground(img image.Image) (color.Color, color.Color, erro
 	centroidA := datumAsPixel(centroids[0])
 	centroidB := datumAsPixel(centroids[1])
 	if counts[0] < counts[1] {
-		return centroidA, centroidB, nil
+		return ChangeValue(centroidA, 1.0), ChangeValue(centroidB, 0.1), nil
 	}
-	return centroidB, centroidA, nil
+	return ChangeValue(centroidB, 1.0), ChangeValue(centroidA, 0.1), nil
 }
 
 func allPixelsAsDatum(img image.Image) []ml.Datum {

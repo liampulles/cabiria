@@ -7,6 +7,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/lucasb-eyer/go-colorful"
+
 	"github.com/liampulles/cabiria/pkg/intertitle"
 )
 
@@ -228,28 +230,28 @@ func TestMapRanges(t *testing.T) {
 			intertitles(1),
 			1.0,
 			interRanges(
-				interRangeWithStyle(0, 0, 1.0, style(white(), white())),
+				interRangeWithStyle(0, 0, 1.0, style(white(), black())),
 			),
 		},
 		{
 			intertitles(1, 0),
 			1.0,
 			interRanges(
-				interRangeWithStyle(0, 0, 1.0, style(white(), white())),
+				interRangeWithStyle(0, 0, 1.0, style(white(), black())),
 			),
 		},
 		{
 			intertitles(0, 1),
 			1.0,
 			interRanges(
-				interRangeWithStyle(1, 1, 1.0, style(black(), black())),
+				interRangeWithStyle(1, 1, 1.0, style(white(), black())),
 			),
 		},
 		{
 			intertitles(0, 1, 0),
 			1.0,
 			interRanges(
-				interRangeWithStyle(1, 1, 1.0, style(black(), black())),
+				interRangeWithStyle(1, 1, 1.0, style(white(), black())),
 			),
 		},
 		// A multiple
@@ -257,35 +259,35 @@ func TestMapRanges(t *testing.T) {
 			intertitles(1, 1),
 			1.0,
 			interRanges(
-				interRangeWithStyle(0, 1, 1.0, style(white(), white())),
+				interRangeWithStyle(0, 1, 1.0, style(white(), black())),
 			),
 		},
 		{
 			intertitles(1, 1, 1),
 			1.0,
 			interRanges(
-				interRangeWithStyle(0, 2, 1.0, style(black(), black())),
+				interRangeWithStyle(0, 2, 1.0, style(white(), black())),
 			),
 		},
 		{
 			intertitles(1, 1, 0),
 			1.0,
 			interRanges(
-				interRangeWithStyle(0, 1, 1.0, style(white(), white())),
+				interRangeWithStyle(0, 1, 1.0, style(white(), black())),
 			),
 		},
 		{
 			intertitles(0, 1, 1),
 			1.0,
 			interRanges(
-				interRangeWithStyle(1, 2, 1.0, style(black(), black())),
+				interRangeWithStyle(1, 2, 1.0, style(white(), black())),
 			),
 		},
 		{
 			intertitles(0, 1, 1, 0),
 			1.0,
 			interRanges(
-				interRangeWithStyle(1, 2, 1.0, style(black(), black())),
+				interRangeWithStyle(1, 2, 1.0, style(white(), black())),
 			),
 		},
 		// Complex case
@@ -293,10 +295,10 @@ func TestMapRanges(t *testing.T) {
 			intertitles(1, 0, 1, 1, 1, 0, 1, 0, 1, 1),
 			1.0,
 			interRanges(
-				interRangeWithStyle(0, 0, 1.0, style(white(), white())),
-				interRangeWithStyle(2, 4, 1.0, style(black(), black())),
-				interRangeWithStyle(6, 6, 1.0, style(white(), white())),
-				interRangeWithStyle(8, 9, 1.0, style(white(), white())),
+				interRangeWithStyle(0, 0, 1.0, style(white(), black())),
+				interRangeWithStyle(2, 4, 1.0, style(white(), black())),
+				interRangeWithStyle(6, 6, 1.0, style(white(), black())),
+				interRangeWithStyle(8, 9, 1.0, style(white(), black())),
 			),
 		},
 	}
@@ -359,19 +361,9 @@ func style(foreground, background color.Color) intertitle.Style {
 }
 
 func white() color.Color {
-	return color.RGBA{
-		255,
-		255,
-		255,
-		255,
-	}
+	return colorful.Hsv(0.0, 0.0, 1.0)
 }
 
 func black() color.Color {
-	return color.RGBA{
-		0,
-		0,
-		0,
-		255,
-	}
+	return colorful.Hsv(0.0, 0.0, 0.1)
 }
